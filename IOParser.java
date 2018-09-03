@@ -6,15 +6,17 @@ public class IOParser{
 		try {
 			br = new BufferedReader(new FileReader(textFileName));
 			String line = br.readLine();
+			while(line != null) {
+				System.out.println(line);
+				line = br.readLine();
+			}
 		}
-		catch(FileNotFoundException e){
+		catch(FileNotFoundException FileReader){
 			System.out.print("Text file not found");
 		}
-		catch(IOException e){
+		catch(IOException readLine){
 			System.out.print("Error reading from file");
 		}
 		if (br != null) try { br.close(); } catch (IOException e) {}
-		
 	}
-
 }
