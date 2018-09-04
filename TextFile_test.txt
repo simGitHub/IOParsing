@@ -1,3 +1,6 @@
-My name is Simon
-I work on my thesis
-hej
+BEGIN_NETWORK
+#NODES 4
+
+
+
+END_NETWORK
