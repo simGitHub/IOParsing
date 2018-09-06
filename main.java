@@ -8,6 +8,7 @@ public class main {
 		}
 		else {
 			System.out.print("Missing input file name");
+			
 		}	
 	}
 }
