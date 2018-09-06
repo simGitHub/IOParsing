@@ -13,10 +13,10 @@ public class IOParser{
 			
 			if(line.equals("BEGIN_NETWORK")) {
 				while(END_NETWORK != true) {
-					// System.out.println(line);
 					line = br.readLine();
 					
-					if(!line.isEmpty()) {
+					if(!line.isEmpty()) { 
+						// Token detection indent
 						StringTokenizer st = new StringTokenizer(line);
 						if(st.nextToken().equals("#NODES")) {
 							int numberOfNodes= Integer.parseInt(st.nextToken());
@@ -26,7 +26,7 @@ public class IOParser{
 								numberOfNodesSpecified = true;
 							}
 							else {
-								System.out.print("Number of nodes must be greater than zero.");
+								System.out.println("Number of nodes must be greater than zero.");
 							}
 						}
 					} else {
@@ -35,7 +35,7 @@ public class IOParser{
 					
 					if(line == null) {
 						System.out.println("Missing or incorrect END_NETWORK line.");
-						END_NETWORK = true; // use break instead?
+						END_NETWORK = true;
 					}
 					else if(line.equals("END_NETWORK")){
 						END_NETWORK = true;
@@ -44,7 +44,7 @@ public class IOParser{
 			}
 			
 			else {
-				System.out.println("Missing or incorrect BEGIN_NETWORK line.");
+				System.out.println("Incorrect first line, should be: BEGIN_NETWORK.");
 			}
 		}
 		
