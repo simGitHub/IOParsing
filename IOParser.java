@@ -13,11 +13,13 @@
  */
 import java.io.*;
 import java.util.*;
+import circuitNetwork.*;
 
 public class IOParser{
 	public void DefineNetwork(String textFileName) {
 		BufferedReader br = null;
-		Network n = new Network();
+		Network network = null;
+		//Network n = new Network();
 		try {
 			br = new BufferedReader(new FileReader(textFileName));
 			boolean END_NETWORK = false;
@@ -40,11 +42,12 @@ public class IOParser{
 					}
 					
 					// Reads tokens from lines and adds parameters to the network. Also checks if line is empty or not
-					int groundNode;
-					int extNode1; int extNode2;
+					// int groundNode;
+					// int extNode1; int extNode2;
 					int driveNode1; int driveNode2;
-					int memNode1; int memNode2;
-					double R; double Rmin; double Rmax;
+					int nPos; int nNeg;
+					double alpha = 1.0; double beta = 3.0; double vthres = 0.5; // For now all memristors have these parameters
+					double initR; double minR; double maxR;
 					if(!line.isEmpty()) { 
 						StringTokenizer st = new StringTokenizer(line);
 						String firstToken = st.nextToken();
@@ -52,7 +55,7 @@ public class IOParser{
 						if(firstToken.equals("#NODES")) {
 							int numberOfNodes= Integer.parseInt(st.nextToken());
 							if(numberOfNodes > 0) {
-								n.setNumberOfNodes(numberOfNodes);
+								network = new Network(numberOfNodes);
 								System.out.println("Number of nodes is set to " + numberOfNodes);
 								//numberOfNodesSpecified = true;
 							}
@@ -61,38 +64,40 @@ public class IOParser{
 							}
 						}
 						// Detects EXT token
-						else if(firstToken.equals("EXT")) {
-							extNode1 = Integer.parseInt(st.nextToken(" ,"));
-							extNode2 = Integer.parseInt(st.nextToken());
-							n.setExtNodes(extNode1, extNode2);
-							System.out.println("EXT set at node " + extNode1 + " and " + extNode2);
-						}
+//						else if(firstToken.equals("EXT")) {
+//							extNode1 = Integer.parseInt(st.nextToken(" ,"));
+//							extNode2 = Integer.parseInt(st.nextToken());
+//							n.setExtNodes(extNode1, extNode2);
+//							System.out.println("EXT set at node " + extNode1 + " and " + extNode2);
+//						}
 						
-						// Detects Ground signal token
-						else if(firstToken.equals("GROUND")) {
-							groundNode = Integer.parseInt(st.nextToken());
-							n.setGround(groundNode);
-							System.out.println("Ground set at node " + groundNode);	
-						}
+						// Detects Ground token
+//						else if(firstToken.equals("GROUND")) {
+//							groundNode = Integer.parseInt(st.nextToken());
+//							n.setGround(groundNode);
+//							System.out.println("Ground set at node " + groundNode);	
+//						}
 						
 						// Detects Drive token
-						else if(firstToken.equals("DRIVE_V")){
-							driveNode1 = Integer.parseInt(st.nextToken(" ,"));
-							driveNode2 = Integer.parseInt(st.nextToken());
-							n.setDriveNodes(driveNode1, driveNode2);
-							System.out.println("Drive set between node " + driveNode1 + " and " + driveNode2);	
-						}
+//						else if(firstToken.equals("DRIVE_V")){
+//							driveNode1 = Integer.parseInt(st.nextToken(" ,"));
+//							driveNode2 = Integer.parseInt(st.nextToken());
+//							n.setDriveNodes(driveNode1, driveNode2);
+//							System.out.println("Drive set between node " + driveNode1 + " and " + driveNode2);	
+//						}
 								
 						// Detects memristor tokens
 						else if(firstToken.equals("MEM")) {
-							memNode1 = Integer.parseInt(st.nextToken(" ,"));
-							memNode2 = Integer.parseInt(st.nextToken(",|"));
-							R = Double.parseDouble(st.nextToken("|,"));
-							Rmin = Double.parseDouble(st.nextToken());
-							Rmax = Double.parseDouble(st.nextToken());
-							n.addMemristor(memNode1, memNode2,R,Rmin,Rmax);
-							System.out.println("Memristor added between node " + memNode1 + " and " + memNode2 + " with R = " + R + 
-									", Rmin = " + Rmin + " and Rmax = " + Rmax + ".");
+							nPos = Integer.parseInt(st.nextToken(" ,"));
+							nNeg = Integer.parseInt(st.nextToken(",|"));
+							initR = Double.parseDouble(st.nextToken("|,"));
+							minR = Double.parseDouble(st.nextToken());
+							maxR = Double.parseDouble(st.nextToken());
+							Memristor memristor = new Memristor(initR, maxR, minR, alpha, beta, vthres, nPos, nNeg);
+							memristor.beUsedForState();
+							network.addbranch(memristor);
+							System.out.println("Memristor added between node " + nPos + " and " + nNeg + " with initR = " + initR + 
+									", minR = " + minR + " and maxR = " + maxR + ".");
 							
 						}
 
