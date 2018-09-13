@@ -16,10 +16,8 @@ import java.util.*;
 import circuitNetwork.*;
 
 public class IOParser{
-	public void DefineNetwork(String textFileName) {
+	public Network DefineNetwork(String textFileName, Network network) {
 		BufferedReader br = null;
-		Network network = null;
-		//Network n = new Network();
 		try {
 			br = new BufferedReader(new FileReader(textFileName));
 			boolean END_NETWORK = false;
@@ -44,7 +42,9 @@ public class IOParser{
 					// Reads tokens from lines and adds parameters to the network. Also checks if line is empty or not
 					// int groundNode;
 					// int extNode1; int extNode2;
-					int driveNode1; int driveNode2;
+					int nPosSource; int nNegSource;
+					double[] ampls = new double[6]; 
+					ampls[0] = -1.2; ampls[1] = 0.4; ampls[2] = -0.3; ampls[3] = 0.7; ampls[4] = -0.4; ampls[5] = 6.28;
 					int nPos; int nNeg;
 					double alpha = 1.0; double beta = 3.0; double vthres = 0.5; // For now all memristors have these parameters
 					double initR; double minR; double maxR;
@@ -63,7 +63,7 @@ public class IOParser{
 								System.out.println("Number of nodes must be greater than zero.");
 							}
 						}
-						// Detects EXT token
+						// Detects EXT token (necessary?)
 //						else if(firstToken.equals("EXT")) {
 //							extNode1 = Integer.parseInt(st.nextToken(" ,"));
 //							extNode2 = Integer.parseInt(st.nextToken());
@@ -71,7 +71,7 @@ public class IOParser{
 //							System.out.println("EXT set at node " + extNode1 + " and " + extNode2);
 //						}
 						
-						// Detects Ground token
+						// Detects Ground token (necessary?)
 //						else if(firstToken.equals("GROUND")) {
 //							groundNode = Integer.parseInt(st.nextToken());
 //							n.setGround(groundNode);
@@ -79,12 +79,13 @@ public class IOParser{
 //						}
 						
 						// Detects Drive token
-//						else if(firstToken.equals("DRIVE_V")){
-//							driveNode1 = Integer.parseInt(st.nextToken(" ,"));
-//							driveNode2 = Integer.parseInt(st.nextToken());
-//							n.setDriveNodes(driveNode1, driveNode2);
-//							System.out.println("Drive set between node " + driveNode1 + " and " + driveNode2);	
-//						}
+						else if(firstToken.equals("DRIVE_V")){
+							nPosSource = Integer.parseInt(st.nextToken(" ,"));
+							nNegSource = Integer.parseInt(st.nextToken());
+							VoltageSource voltageSource = new VoltageSource(ampls, nPosSource, nNegSource);
+							network.addsource(voltageSource);
+							System.out.println("Voltage source set between node " + nPosSource + " and " + nNegSource);	
+						}
 								
 						// Detects memristor tokens
 						else if(firstToken.equals("MEM")) {
@@ -133,15 +134,19 @@ public class IOParser{
 		}
 		
 		if (br != null) try { br.close(); } catch (IOException e) {}
+		
+		// return statement, returns the created network object
+		return network;
 	}
+	
 }
 
 // ** Below is a template for text file for IOParsing (this line is not included in the template).**
 //BEGIN_NETWORK
 //#NODES 4
-//GROUND 2
+//(GROUND 2)
 //DRIVE_V 1,2
-//EXT 3,4
+//(EXT 3,4)
 //MEM 1, 2|2.0, 3.0, 4.5
 //MEM 2, 3|3.0, 4.0, 5.0
 //MEM 1, 4|2.3, 3.0, 5.0
