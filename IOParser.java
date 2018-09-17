@@ -14,6 +14,7 @@
 import java.io.*;
 import java.util.*;
 import circuitNetwork.*;
+import circuitNetwork.TwoPortElement;
 
 public class IOParser{
 	public Network DefineNetwork(String textFileName, Network network) {
@@ -63,21 +64,7 @@ public class IOParser{
 								System.out.println("Number of nodes must be greater than zero.");
 							}
 						}
-						// Detects EXT token (necessary?)
-//						else if(firstToken.equals("EXT")) {
-//							extNode1 = Integer.parseInt(st.nextToken(" ,"));
-//							extNode2 = Integer.parseInt(st.nextToken());
-//							n.setExtNodes(extNode1, extNode2);
-//							System.out.println("EXT set at node " + extNode1 + " and " + extNode2);
-//						}
-						
-						// Detects Ground token (necessary?)
-//						else if(firstToken.equals("GROUND")) {
-//							groundNode = Integer.parseInt(st.nextToken());
-//							n.setGround(groundNode);
-//							System.out.println("Ground set at node " + groundNode);	
-//						}
-						
+
 						// Detects Drive token
 						else if(firstToken.equals("DRIVE_V")){
 							nPosSource = Integer.parseInt(st.nextToken(" ,"));
