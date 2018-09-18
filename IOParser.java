@@ -26,17 +26,17 @@ public class IOParser{
 			String line = br.readLine();
 			
 			if(line.equals("BEGIN_NETWORK")) {
-				System.out.println("Starting to read lines.");
+				System.out.println("Starting to read lines");
 				while(END_NETWORK != true) {
 					line = br.readLine();
 					
 					if(line == null) {
-						System.out.println("Null line detected: missing or incorrect END_NETWORK line.");
+						System.out.println("Null line detected: missing or incorrect END_NETWORK line");
 						break;
 					}
 					
 					else if(line.equals("END_NETWORK")){
-						System.out.println("End of line.");
+						System.out.println("End of line");
 						END_NETWORK = true;
 					}
 					
@@ -57,7 +57,7 @@ public class IOParser{
 								//numberOfNodesSpecified = true;
 							}
 							else {
-								System.out.println("Number of nodes must be greater than zero.");
+								System.out.println("Number of nodes must be greater than zero");
 							}
 						}
 
@@ -76,15 +76,15 @@ public class IOParser{
 							VoltageSource voltageSource = new VoltageSource(ampls, nPosSource, nNegSource);
 							network.addsource(voltageSource);
 							
-							System.out.println("Voltage source set between node " + nPosSource + " and " + nNegSource);	
-							System.out.print("Voltage source have DC set to: " + ampls[0]);
-							System.out.print(", with frequency amplitudes: ");
+							System.out.print("Voltage source set between node " + nPosSource + " and " + nNegSource);	
+							System.out.print(". DC set to: " + ampls[0]);
+							System.out.print(", frequency amplitudes: ");
 							int j = 1;
 							while( j < (numberOfAmpIndices - 1) ) {
 									System.out.print(ampls[j] + ", ");
 									j = j + 1;
 								}
-							System.out.println("and with frequency: " + ampls[numberOfAmpIndices - 1]);
+							System.out.println("and frequency: " + ampls[numberOfAmpIndices - 1]);
 						}
 
 								
@@ -99,13 +99,13 @@ public class IOParser{
 							memristor.beUsedForState();
 							network.addbranch(memristor);
 							System.out.println("Memristor added between node " + nPos + " and " + nNeg + " with initR = " + initR + 
-									", minR = " + minR + " and maxR = " + maxR + ".");
+									", minR = " + minR + " and maxR = " + maxR);
 							
 						}
 
 						
 					} else {
-						System.out.println("Empty line detected.");
+						System.out.println("Empty line detected");
 					}
 					
 					
@@ -114,24 +114,24 @@ public class IOParser{
 			}
 			
 			else {
-				System.out.println("Incorrect first line, should be BEGIN_NETWORK.");
+				System.out.println("Incorrect first line, should be BEGIN_NETWORK");
 			}
 		}
 		catch(NoSuchElementException stringTokenizer) {
-			System.out.println("Error with delimiter/tokenizer.");
+			System.out.println("Error with delimiter/tokenizer");
 			System.out.println("Error message: " + stringTokenizer.getLocalizedMessage() );
 		}
 		
 		catch(NumberFormatException stringToIntegerConvertion) {
-			System.out.println("Error in converting from string to integer/double, parameter must be an integer/double. ");
+			System.out.println("Error in converting from string to integer/double, parameter must be an integer/double ");
 			System.out.println("Error message: " + stringToIntegerConvertion.getLocalizedMessage() );
 		}
 		
 		catch(FileNotFoundException fileReader){
-			System.out.println("Text file not found.");
+			System.out.println("Text file not found");
 		}
 		catch(IOException readLine){
-			System.out.println("Error reading from file.");
+			System.out.println("Error reading from file");
 		}
 		
 		if (br != null) try { br.close(); } catch (IOException e) {}
@@ -149,10 +149,10 @@ public class IOParser{
 //MEM 1, 2|2.0, 3.0, 4.5
 //END_NETWORK
 
-// ** Below is a generic version trying to explain the different parameters. **
+// ** Below is a generic version trying to explain the different parameters. #values in DRIVE_V row is needed to define array size**
 //BEGIN_NETWORK
 //#NODES #nodes
-//DRIVE_V node1, node2|#indices_in_array|DC_value, ampl_1, ampl_2, ampl_3, ampl_4, frequency
+//DRIVE_V node1, node2|#values|DC_value, ampl_1, ampl_2, ampl_3, ampl_4, frequency
 //MEM node1,node2|initR, minR, maxR
 //END_NETWORK
 
