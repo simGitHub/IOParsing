@@ -41,11 +41,7 @@ public class IOParser{
 					}
 					
 					// Reads tokens from lines and adds parameters to the network. Also checks if line is empty or not
-					// int groundNode;
-					// int extNode1; int extNode2;
-					int nPosSource; int nNegSource;
-					double[] ampls = new double[6]; 
-					ampls[0] = -1.2; ampls[1] = 0.4; ampls[2] = -0.3; ampls[3] = 0.7; ampls[4] = -0.4; ampls[5] = 6.28;
+					int nPosSource; int nNegSource; int numberOfAmpIndices; double[] ampls;					
 					int nPos; int nNeg;
 					double alpha = 1.0; double beta = 3.0; double vthres = 0.5; // For now all memristors have these parameters
 					double initR; double minR; double maxR;
@@ -65,14 +61,32 @@ public class IOParser{
 							}
 						}
 
-						// Detects Drive token
+						// Detects Drive token with the amplitude values
 						else if(firstToken.equals("DRIVE_V")){
 							nPosSource = Integer.parseInt(st.nextToken(" ,"));
-							nNegSource = Integer.parseInt(st.nextToken());
+							nNegSource = Integer.parseInt(st.nextToken(",|"));
+							numberOfAmpIndices =  Integer.parseInt(st.nextToken("|,"));
+							ampls = new double[numberOfAmpIndices];
+							int i = 0;
+							while(st.hasMoreTokens()) {
+								ampls[i] = Double.parseDouble(st.nextToken());
+								i = i + 1;
+							}
+							
 							VoltageSource voltageSource = new VoltageSource(ampls, nPosSource, nNegSource);
 							network.addsource(voltageSource);
+							
 							System.out.println("Voltage source set between node " + nPosSource + " and " + nNegSource);	
+							System.out.print("Voltage source have DC set to: " + ampls[0]);
+							System.out.print(", with frequency amplitudes: ");
+							int j = 1;
+							while( j < (numberOfAmpIndices - 1) ) {
+									System.out.print(ampls[j] + ", ");
+									j = j + 1;
+								}
+							System.out.println("and with frequency: " + ampls[numberOfAmpIndices - 1]);
 						}
+
 								
 						// Detects memristor tokens
 						else if(firstToken.equals("MEM")) {
@@ -131,22 +145,14 @@ public class IOParser{
 // ** Below is a template for text file for IOParsing (this line is not included in the template).**
 //BEGIN_NETWORK
 //#NODES 4
-//(GROUND 2)
-//DRIVE_V 1,2
-//(EXT 3,4)
+//DRIVE_V 1,2|6|0, 0.4, -0.3, 0.7, -0.4, 6.28
 //MEM 1, 2|2.0, 3.0, 4.5
-//MEM 2, 3|3.0, 4.0, 5.0
-//MEM 1, 4|2.3, 3.0, 5.0
 //END_NETWORK
 
-// ** Below is a generic version.**
+// ** Below is a generic version trying to explain the different parameters. **
 //BEGIN_NETWORK
 //#NODES #nodes
-//GROUND groundNode
-//EXT node1,node2
-//DRIVE_V node1,node2
-//MEM node1,node2|R, Rmin, Rmax
-//MEM node1,node2|R, Rmin, Rmax
-//MEM node1,node2|R, Rmin, Rmax
+//DRIVE_V node1, node2|#indices_in_array|DC_value, ampl_1, ampl_2, ampl_3, ampl_4, frequency
+//MEM node1,node2|initR, minR, maxR
 //END_NETWORK
 
