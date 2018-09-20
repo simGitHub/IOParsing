@@ -26,7 +26,7 @@ public class IOParser{
 			String line = br.readLine();
 			
 			if(line.equals("BEGIN_NETWORK")) {
-				System.out.println("Starting to read lines");
+				System.out.println("Starting to read text file");
 				while(END_NETWORK != true) {
 					line = br.readLine();
 					
@@ -36,7 +36,7 @@ public class IOParser{
 					}
 					
 					else if(line.equals("END_NETWORK")){
-						System.out.println("End of line");
+						System.out.println("Finished reading text file");
 						END_NETWORK = true;
 					}
 					
