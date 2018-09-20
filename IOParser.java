@@ -41,7 +41,7 @@ public class IOParser{
 					}
 					
 					// Reads tokens from lines and adds parameters to the network. Also checks if line is empty or not
-					int nPosSource; int nNegSource; int numberOfAmpIndices; double[] ampls;					
+					int nPosSource; int nNegSource; int numberOfAmpIndices; double[] ampls;	int DC_multiplier = 4;			
 					int nPos; int nNeg;
 					double alpha = 1.0; double beta = 3.0; double vthres = 0.5; // For now all memristors have these parameters
 					double initR; double minR; double maxR;
@@ -72,12 +72,13 @@ public class IOParser{
 								ampls[i] = Double.parseDouble(st.nextToken());
 								i = i + 1;
 							}
+							ampls[0] = ampls[0] * DC_multiplier;
 							
 							VoltageSource voltageSource = new VoltageSource(ampls, nPosSource, nNegSource);
 							network.addsource(voltageSource);
 							
 							System.out.print("Voltage source set between node " + nPosSource + " and " + nNegSource);	
-							System.out.print(". DC set to: " + ampls[0]);
+							System.out.print(". DC set to: " + ampls[0] / DC_multiplier);
 							System.out.print(", frequency amplitudes: ");
 							int j = 1;
 							while( j < (numberOfAmpIndices - 1) ) {

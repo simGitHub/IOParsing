@@ -10,36 +10,40 @@ public class main {
 
 		// End of temporary code
 		IOParser par = new IOParser();
-		final int simulation_time = 50;
+		final int SIMULATION_TIME = 50;
 		if(args.length != 0) {
 			Network network = null;
 			String textFileName = args[0];
 			network = par.DefineNetwork(textFileName, network);
-			network.addmonitor(1); // memristor (beUsedForState()) is utilized in IOParser class
-			network.addmonitor(2);
+			
+			// memristor (beUsedForState()) is utilized in IOParser class
+			network.addmonitor(1); //v1
+			network.addmonitor(2); //v2
+			network.addmonitor(3); //v3
 			System.out.println("Starting simulation");
-			network.operateNetwork(0.0, simulation_time);
+			network.operateNetwork(0.0, SIMULATION_TIME);
 			System.out.println("Simulation finished");
 			
 			
 			// get monitors
 			System.out.println("Extract gathered data from monitors");
-			ArrayList<Monitor> monitors = network.getMonitors();
-			Monitor monitor1 = monitors.get(0);
-			ArrayList<Double> values1 = monitor1.getValues();
+			ArrayList<Monitor> monitors = network.getMonitors(); //length should be 3+3=6
+			System.out.println("Length of array list is: " + monitors.size() );
 			String directory = "C:/Users/simkarls/eclipse-workspace/Simulator/Data";
-			String str1 = directory + "/v1.txt";
-			savaToFile sv1 = new savaToFile(values1, str1);
 			
+			Monitor monitor1 = monitors.get(0);
 			Monitor monitor2 = monitors.get(1);
-			ArrayList<Double> values2 = monitor2.getValues();
-			String str2 = directory + "/i.txt";
-			savaToFile sv2 = new savaToFile(values2, str2);
-			
 			Monitor monitor3 = monitors.get(2);
-			ArrayList<Double> values3 = monitor3.getValues();
-			String str3 = directory + "/memristance1.txt";
-			savaToFile sv3 = new savaToFile(values3, str3);
+			ArrayList<Double> v1 = monitor1.getValues();
+			ArrayList<Double> v2 = monitor2.getValues();
+			ArrayList<Double> v3 = monitor3.getValues();
+			String str1 = directory + "/v1.txt";
+			String str2 = directory + "/v2.txt";
+			String str3 = directory + "/v3.txt";
+			new savaToFile(v1, str1);
+			new savaToFile(v2, str2);
+			new savaToFile(v3, str3);
+
 			
 		}
 		
