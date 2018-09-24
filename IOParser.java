@@ -100,7 +100,7 @@ public class IOParser{
 							memristor.beUsedForState();
 							network.addbranch(memristor);
 							System.out.println("Memristor added between node " + nPos + " and " + nNeg + " with initR = " + initR + 
-									", minR = " + minR + " and maxR = " + maxR);
+									", minR = " + minR + " and maxR = " + maxR + ". Also the v_tresh is: " + vthres);
 							
 						}
 

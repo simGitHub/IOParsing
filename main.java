@@ -20,6 +20,7 @@ public class main {
 			network.addmonitor(1); //v1
 			network.addmonitor(2); //v2
 			network.addmonitor(3); //v3
+			network.addmonitor(4); //i1
 			System.out.println("Starting simulation");
 			network.operateNetwork(0.0, SIMULATION_TIME);
 			System.out.println("Simulation finished");
@@ -34,16 +35,19 @@ public class main {
 			Monitor monitor1 = monitors.get(0);
 			Monitor monitor2 = monitors.get(1);
 			Monitor monitor3 = monitors.get(2);
+			Monitor monitor4 = monitors.get(3);
 			ArrayList<Double> v1 = monitor1.getValues();
 			ArrayList<Double> v2 = monitor2.getValues();
 			ArrayList<Double> v3 = monitor3.getValues();
+			ArrayList<Double> i1 = monitor4.getValues();
 			String str1 = directory + "/v1.txt";
 			String str2 = directory + "/v2.txt";
 			String str3 = directory + "/v3.txt";
+			String str4 = directory + "/i1.txt";
 			new savaToFile(v1, str1);
 			new savaToFile(v2, str2);
 			new savaToFile(v3, str3);
-
+			new savaToFile(i1, str4);
 			
 		}
 		
