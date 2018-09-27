@@ -32,22 +32,18 @@ public class main {
 			System.out.println("Length of array list is: " + monitors.size() );
 			String directory = "C:/Users/simkarls/eclipse-workspace/Simulator/Data";
 			
-			Monitor monitor1 = monitors.get(0);
-			Monitor monitor2 = monitors.get(1);
-			Monitor monitor3 = monitors.get(2);
-			Monitor monitor4 = monitors.get(3);
-			ArrayList<Double> v1 = monitor1.getValues();
-			ArrayList<Double> v2 = monitor2.getValues();
-			ArrayList<Double> v3 = monitor3.getValues();
-			ArrayList<Double> i1 = monitor4.getValues();
-			String str1 = directory + "/v1.txt";
-			String str2 = directory + "/v2.txt";
-			String str3 = directory + "/v3.txt";
-			String str4 = directory + "/i1.txt";
-			new savaToFile(v1, str1);
-			new savaToFile(v2, str2);
-			new savaToFile(v3, str3);
-			new savaToFile(i1, str4);
+			Monitor vMonitor1 = monitors.get(0);
+			Monitor iMonitor1 = monitors.get(3);
+			Monitor mMonitor1 = monitors.get(4);
+			ArrayList<Double> v1 = vMonitor1.getValues();
+			ArrayList<Double> i1 = iMonitor1.getValues();
+			ArrayList<Double> m1 = mMonitor1.getValues();
+			String vStr1 = directory + "/v1.txt";
+			String iStr1 = directory + "/i1.txt";
+			String mStr1 = directory + "/m1.txt";
+			new savaToFile(v1, vStr1);
+			new savaToFile(i1, iStr1);
+			new savaToFile(m1, mStr1);
 			
 		}
 		
