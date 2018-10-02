@@ -15,10 +15,12 @@ import java.io.*;
 import java.util.*;
 import circuitNetwork.*;
 import circuitNetwork.TwoPortElement;
+import java.util.Random;
 
 public class IOParser{
 	public Network DefineNetwork(String textFileName, Network network) {
 		BufferedReader br = null;
+		Random r = new Random();
 		try {
 			br = new BufferedReader(new FileReader(textFileName));
 			boolean END_NETWORK = false;
@@ -43,7 +45,8 @@ public class IOParser{
 					// Reads tokens from lines and adds parameters to the network. Also checks if line is empty or not
 					int nPosSource; int nNegSource; int numberOfAmpIndices; double[] ampls;	int DC_multiplier = 4;			
 					int nPos; int nNeg;
-					double alpha = 1.0; double beta = 3.0; double vthres = 0.5; // For now all memristors have these parameters
+					double alpha_mu = 1.0; double alpha_sigma = 0.4; double beta_mu = 10; double beta_sigma = 4.0;
+					double alpha; double beta; double vthres = 0.4;
 					double initR; double minR; double maxR;
 					if(!line.isEmpty()) { 
 						StringTokenizer st = new StringTokenizer(line);
@@ -96,6 +99,9 @@ public class IOParser{
 							initR = Double.parseDouble(st.nextToken("|,"));
 							minR = Double.parseDouble(st.nextToken());
 							maxR = Double.parseDouble(st.nextToken());
+							alpha = r.nextGaussian()*alpha_sigma + alpha_mu;
+							beta = r.nextGaussian()*beta_sigma + beta_mu;
+							System.out.println("Alpha is set to: " + alpha + ", and beta is set to: " + beta);
 							Memristor memristor = new Memristor(initR, maxR, minR, alpha, beta, vthres, nPos, nNeg);
 							memristor.beUsedForState();
 							network.addbranch(memristor);
