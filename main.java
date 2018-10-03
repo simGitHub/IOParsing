@@ -28,7 +28,7 @@ public class main {
 			System.out.println("Extract gathered data from monitors");
 			ArrayList<Monitor> monitors = network.getMonitors(); //length should be 3+3=6
 			System.out.println("Length of array list is: " + monitors.size() );
-			String directory = "C:/Users/simon/eclipse-workspace/Simulator/Data";
+			String directory = "C:/Users/simkarls/eclipse-workspace/Simulator/Data";
 			
 			Monitor vMonitor1 = monitors.get(0);
 			Monitor mMonitor1 = monitors.get(2);

@@ -76,10 +76,8 @@ public class IOParser{
 								i = i + 1;
 							}
 							ampls[0] = ampls[0] * DC_multiplier;
-							
 							VoltageSource voltageSource = new VoltageSource(ampls, nPosSource, nNegSource);
 							network.addsource(voltageSource);
-							
 							System.out.print("Voltage source set between node " + nPosSource + " and " + nNegSource);	
 							System.out.print(". DC set to: " + ampls[0] / DC_multiplier);
 							System.out.print(", frequency amplitudes: ");
@@ -101,13 +99,13 @@ public class IOParser{
 							maxR = Double.parseDouble(st.nextToken());
 							alpha = r.nextGaussian()*alpha_sigma + alpha_mu;
 							beta = r.nextGaussian()*beta_sigma + beta_mu;
-							System.out.println("Alpha is set to: " + alpha + ", and beta is set to: " + beta);
 							Memristor memristor = new Memristor(initR, maxR, minR, alpha, beta, vthres, nPos, nNeg);
 							memristor.beUsedForState();
 							network.addbranch(memristor);
-							System.out.println("Memristor added between node " + nPos + " and " + nNeg + " with initR = " + initR + 
+							System.out.print("Memristor added between node " + nPos + " and " + nNeg + " with initR = " + initR + 
 									", minR = " + minR + " and maxR = " + maxR + ". Also the v_tresh is: " + vthres);
-							
+
+							System.out.println(". Alpha is set to: " + alpha + ", and beta is set to: " + beta);
 						}
 
 						
