@@ -1,0 +1,47 @@
+v1 = load("v1.txt");
+i1 = load('i1.txt');
+m1 = load('m1.txt');
+
+
+figure(1)
+plot(i1);
+ylabel('i1');
+figure(2)
+plot(m1)
+ylabel('m1');
+figure(3)
+plot(v1)
+ylabel('v1')
+
+
+
+%% square and triangular wave generation
+clear;clc;clf;
+dt=0.01; T = 20;
+t = 0:dt:T;
+square = square(t*4);
+triangle = sawtooth(t,0.5);
+M = zeros(length(t),2);
+hold on
+plot(t,square)
+plot(t,triangle)
+hold off
+
+M(:,2) = y;
+M(:,1) = t;
+dlmwrite('square_wave',M, ' ')
+
+%% Test of dataset
+load('dataset.csv')
+
+%% temp code 2
+
+T = 10*(1/50);
+Fs = 1000;
+dt = 1/Fs;
+t = 0:dt:T-dt;
+x = sawtooth(2*pi*50*t,0.5);
+plot(t,x)
+
+plot(t,x)
+grid on
