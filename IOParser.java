@@ -42,6 +42,7 @@ public class IOParser{
 						END_NETWORK = true;
 					}
 					
+					
 					// Reads tokens from lines and adds parameters to the network. Also checks if line is empty or not
 					int nPosSource; int nNegSource; int numberOfAmpIndices; double[] ampls;	int DC_multiplier = 4;			
 					int nPos; int nNeg;
@@ -51,6 +52,7 @@ public class IOParser{
 					if(!line.isEmpty()) { 
 						StringTokenizer st = new StringTokenizer(line);
 						String firstToken = st.nextToken();
+						
 						// Detects node token
 						if(firstToken.equals("#NODES")) {
 							int numberOfNodes= Integer.parseInt(st.nextToken());
@@ -65,7 +67,7 @@ public class IOParser{
 						}
 
 						// Detects Drive token with the amplitude values
-						else if(firstToken.equals("DRIVE_V")){
+						else if(firstToken.equals("FREQUENCY_INPUT")){
 							nPosSource = Integer.parseInt(st.nextToken(" ,"));
 							nNegSource = Integer.parseInt(st.nextToken(",|"));
 							numberOfAmpIndices =  Integer.parseInt(st.nextToken("|,"));
@@ -88,10 +90,19 @@ public class IOParser{
 								}
 							System.out.println("and frequency: " + ampls[numberOfAmpIndices - 1]);
 						}
+						
+						else if(firstToken.equals("READ_DATA")){
+							
+						}
+						
+						else if(firstToken.equals("DATA_INPUT")){
+							
+						}
+
 
 								
-						// Detects memristor tokens
-						else if(firstToken.equals("MEM")) {
+						// Detects memristor tokens and adds them to the network. Alpha and beta is drawned from normal distribution
+						else if(firstToken.equals("ADD_MEM")) {
 							nPos = Integer.parseInt(st.nextToken(" ,"));
 							nNeg = Integer.parseInt(st.nextToken(",|"));
 							initR = Double.parseDouble(st.nextToken("|,"));
