@@ -21,7 +21,8 @@ public class main {
 			System.out.println("Simulation finished");
 			
 			
-			// get monitors
+			// exctract all monitors, memristors to one 2D array and voltage to one 2D array, both arrays are exported to a 2D text file
+			// index of column should correspond to the index of node
 			System.out.println("Extract gathered data from monitors");
 			ArrayList<Monitor> monitors = network.getMonitors();
 			System.out.println("Length of array list is: " + monitors.size() );
@@ -43,7 +44,6 @@ public class main {
 			new savaToFile(v2, vStr2);
 			new savaToFile(m1, mStr1);
 			new savaToFile(m2, mStr2);
-			
 		}
 		
 		// runs if no textile input is given (for testing purpose)
