@@ -10,7 +10,7 @@ public class main {
 
 		// End of temporary code
 		IOParser par = new IOParser();
-		final int SIMULATION_TIME = 50;
+		final int SIMULATION_TIME = 19;
 		if(args.length != 0) {
 			Network network = null;
 			String textFileName = args[0];
@@ -31,13 +31,21 @@ public class main {
 			String directory = "C:/Users/simon/eclipse-workspace/Simulator/Data";
 			
 			Monitor vMonitor1 = monitors.get(0);
+			Monitor vMonitor2 = monitors.get(1);
 			Monitor mMonitor1 = monitors.get(2);
+			Monitor mMonitor2 = monitors.get(3);
 			ArrayList<Double> v1 = vMonitor1.getValues();
+			ArrayList<Double> v2 = vMonitor2.getValues();
 			ArrayList<Double> m1 = mMonitor1.getValues();
+			ArrayList<Double> m2 = mMonitor2.getValues();
 			String vStr1 = directory + "/v1.txt";
+			String vStr2 = directory + "/v2.txt";
 			String mStr1 = directory + "/m1.txt";
+			String mStr2 = directory + "/m2.txt";
 			new savaToFile(v1, vStr1);
+			new savaToFile(v2, vStr2);
 			new savaToFile(m1, mStr1);
+			new savaToFile(m2, mStr2);
 			
 		}
 		

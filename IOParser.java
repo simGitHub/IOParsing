@@ -104,7 +104,7 @@ public class IOParser{
 							fileName = dataSetDirectory + fileName;
 							double[][] dataset = textToArrayReader.readInTheArray(fileName);
 							ampls = new double[0];
-							VoltageSource vd = new VoltageSource(ampls, nPosSource + 1, nNegSource); // why not use same nodes for both sources?
+							VoltageSource vd = new VoltageSource(ampls, nPosSource + 2, nNegSource); // why not use same nodes for both sources?
 							vd.toHaveConstantValue(-0.1); // what does this mean?
 							vd.defineDTtoSuggest(dt);
 							network.addsource(vd);
