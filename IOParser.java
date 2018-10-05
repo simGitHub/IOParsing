@@ -15,7 +15,9 @@ import java.io.*;
 import java.util.*;
 import circuitNetwork.*;
 import circuitNetwork.TwoPortElement;
+import readData.ReadFromTextFile2DArray;
 import java.util.Random;
+
 
 public class IOParser{
 	public Network DefineNetwork(String textFileName, Network network) {
@@ -49,6 +51,9 @@ public class IOParser{
 					double alpha_mu = 1.0; double alpha_sigma = 0.4; double beta_mu = 10; double beta_sigma = 4.0;
 					double alpha; double beta; double vthres = 0.4;
 					double initR; double minR; double maxR;
+					double dt; String fileName;
+					String dataSetDirectory = "C:\\Users\\Simon\\eclipse-workspace\\Simulator\\src\\Data\\Datasets\\";
+					ReadFromTextFile2DArray textToArrayReader = new ReadFromTextFile2DArray();
 					if(!line.isEmpty()) { 
 						StringTokenizer st = new StringTokenizer(line);
 						String firstToken = st.nextToken();
@@ -91,12 +96,23 @@ public class IOParser{
 							System.out.println("and frequency: " + ampls[numberOfAmpIndices - 1]);
 						}
 						
-						else if(firstToken.equals("READ_DATA")){
-							
-						}
-						
 						else if(firstToken.equals("DATA_INPUT")){
-							
+							dt = 0.01;
+							nPosSource = Integer.parseInt(st.nextToken(" ,"));
+							nNegSource = Integer.parseInt(st.nextToken(",|"));
+							fileName = st.nextToken();
+							fileName = dataSetDirectory + fileName;
+							double[][] dataset = textToArrayReader.readInTheArray(fileName);
+							ampls = new double[0];
+							VoltageSource vd = new VoltageSource(ampls, nPosSource + 1, nNegSource); // why not use same nodes for both sources?
+							vd.toHaveConstantValue(-0.1); // what does this mean?
+							vd.defineDTtoSuggest(dt);
+							network.addsource(vd);
+							VoltageSourceDictated vg = new VoltageSourceDictated(ampls, nPosSource, nNegSource);
+							vg.dictate(dataset, 1);
+							vg.defineDTtoSuggest(dt);
+							network.addsource(vg);
+							System.out.println("Input voltage set between node " + nPosSource + " and " + nNegSource + ". Dataset from file " + fileName + " has been extracted and added as source");
 						}
 
 

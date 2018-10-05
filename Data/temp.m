@@ -33,8 +33,8 @@ M_square(:,2) = square;
 M_triangle(:,2) = triangle;
 M_square(:,1) = t;
 M_triangle(:,1) = t;
-dlmwrite('squareWave-20_0.01',M_square, ' ')
-dlmwrite('TriangleWave-20_0.01',M_triangle, ' ')
+dlmwrite('squareWave-20_0.01.txt',M_square, ' ')
+dlmwrite('TriangleWave-20_0.01.txt',M_triangle, ' ')
 
 %% Test of dataset
 load('dataset.csv')
