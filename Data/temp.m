@@ -1,17 +1,11 @@
 v1 = load("v1.txt");
-i1 = load('i1.txt');
+m2 = load('m2.txt');
 m1 = load('m1.txt');
 
-
+hold on
 figure(1)
-plot(i1);
-ylabel('i1');
-figure(2)
-plot(m1)
-ylabel('m1');
-figure(3)
-plot(v1)
-ylabel('v1')
+plot(v1,m1);
+
 
 
 

@@ -8,8 +8,7 @@
 
 /*
  * Temporarily thoughts: 
- * 		add some lines to check if necessary parameters have been set before e.g. adding memristors to the network.
- * 		E.g. check that the number of nodes have been when adding memristors.
+ * 		Adding monitors with same index yield more monitors? perhaps same monitor is added to the array list
  */
 import java.io.*;
 import java.util.*;
@@ -21,8 +20,21 @@ import java.util.Random;
 
 public class IOParser{
 	public Network DefineNetwork(String textFileName, Network network) {
+		
+		// declaration of variables
 		BufferedReader br = null;
 		Random r = new Random();
+		int numberOfNodes = 0;
+		int nPosSource; int nNegSource; int numberOfAmpIndices; double[] ampls;	int DC_multiplier = 4;			
+		int nPos; int nNeg;
+		double alpha_mu = 1.0; double alpha_sigma = 0.4; double beta_mu = 10; double beta_sigma = 4.0;
+		double alpha; double beta; double vthres = 0.4;
+		double initR; double minR; double maxR;
+		double dt; String fileName; 
+		String dataSetDirectory = "/users/simon/eclipse-workspace/simulator/src/data/datasets/";
+		String monitorArgument; String extractMonitorArgument; String addMonitorArgument;
+		ReadFromTextFile2DArray textToArrayReader = new ReadFromTextFile2DArray();
+		
 		try {
 			br = new BufferedReader(new FileReader(textFileName));
 			boolean END_NETWORK = false;
@@ -45,22 +57,14 @@ public class IOParser{
 					}
 					
 					
-					// Reads tokens from lines and adds parameters to the network. Also checks if line is empty or not
-					int nPosSource; int nNegSource; int numberOfAmpIndices; double[] ampls;	int DC_multiplier = 4;			
-					int nPos; int nNeg;
-					double alpha_mu = 1.0; double alpha_sigma = 0.4; double beta_mu = 10; double beta_sigma = 4.0;
-					double alpha; double beta; double vthres = 0.4;
-					double initR; double minR; double maxR;
-					double dt; String fileName;
-					String dataSetDirectory = "C:\\Users\\Simon\\eclipse-workspace\\Simulator\\src\\Data\\Datasets\\";
-					ReadFromTextFile2DArray textToArrayReader = new ReadFromTextFile2DArray();
+					// reads command token, as long as the line is not empty
 					if(!line.isEmpty()) { 
 						StringTokenizer st = new StringTokenizer(line);
-						String firstToken = st.nextToken();
+						String command = st.nextToken();
 						
-						// Detects node token
-						if(firstToken.equals("#NODES")) {
-							int numberOfNodes= Integer.parseInt(st.nextToken());
+						// Detects node command
+						if(command.equals("#NODES")) {
+							numberOfNodes = Integer.parseInt(st.nextToken());
 							if(numberOfNodes > 0) {
 								network = new Network(numberOfNodes);
 								System.out.println("Number of nodes is set to " + numberOfNodes);
@@ -71,8 +75,8 @@ public class IOParser{
 							}
 						}
 
-						// Detects Drive token with the amplitude values
-						else if(firstToken.equals("FREQUENCY_INPUT")){
+						// Sets frequency signal with amplitude values
+						else if(command.equals("FREQUENCY_INPUT")){
 							nPosSource = Integer.parseInt(st.nextToken(" ,"));
 							nNegSource = Integer.parseInt(st.nextToken(",|"));
 							numberOfAmpIndices =  Integer.parseInt(st.nextToken("|,"));
@@ -96,7 +100,8 @@ public class IOParser{
 							System.out.println("and frequency: " + ampls[numberOfAmpIndices - 1]);
 						}
 						
-						else if(firstToken.equals("DATA_INPUT")){
+						// sets voltage source from data file
+						else if(command.equals("DATA_INPUT")){
 							dt = 0.01;
 							nPosSource = Integer.parseInt(st.nextToken(" ,"));
 							nNegSource = Integer.parseInt(st.nextToken(",|"));
@@ -104,7 +109,7 @@ public class IOParser{
 							fileName = dataSetDirectory + fileName;
 							double[][] dataset = textToArrayReader.readInTheArray(fileName);
 							ampls = new double[0];
-							VoltageSource vd = new VoltageSource(ampls, nPosSource + 2, nNegSource); // why not use same nodes for both sources?
+							VoltageSource vd = new VoltageSource(ampls, numberOfNodes, nNegSource); // why not use same nodes for both sources? this needs some futher consideration
 							vd.toHaveConstantValue(-0.1); // what does this mean?
 							vd.defineDTtoSuggest(dt);
 							network.addsource(vd);
@@ -118,7 +123,7 @@ public class IOParser{
 
 								
 						// Detects memristor tokens and adds them to the network. Alpha and beta is drawned from normal distribution
-						else if(firstToken.equals("ADD_MEM")) {
+						else if(command.equals("ADD_MEM")) {
 							nPos = Integer.parseInt(st.nextToken(" ,"));
 							nNeg = Integer.parseInt(st.nextToken(",|"));
 							initR = Double.parseDouble(st.nextToken("|,"));
@@ -134,7 +139,54 @@ public class IOParser{
 
 							System.out.println(". Alpha is set to: " + alpha + ", and beta is set to: " + beta);
 						}
+						
+						// extract memristor and/or voltage monitors to text file of size m x n, where m is number of monitors and n is number of data points for given monitor
+						else if(command.equals("EXTRACT_MONITOR")) {
+							monitorArgument = st.nextToken(",");
+							extractMonitorArgument = st.nextToken();
+							if (monitorArgument.equals("memristor")){
+								if(extractMonitorArgument.equals("all")) {
+									
+								}
+							}
+							if (monitorArgument.equals("voltage")){
+								if(extractMonitorArgument.equals("all")) {
+									
+								}
+							}
+						}
+						
+						else if(command.equals("ADD_MONITOR")) {
+							monitorArgument = st.nextToken(" ,");
+							addMonitorArgument = st.nextToken();
+							if(monitorArgument.equals("voltage") & addMonitorArgument.equals("all")){
+								System.out.println("Voltage monitors added at every node" );
+								for(int i=1;i<=numberOfNodes;i++) {
+									network.addmonitor(i);
+								}
+							}
+							else if(monitorArgument.equals("voltage") & (!addMonitorArgument.equals("all"))) {
+								int i = Integer.parseInt(addMonitorArgument);
+								if(i <= numberOfNodes & i >= 0) {
+									network.addmonitor(i);
+									System.out.println("Voltage monitor added at node " + i);
+									if(i == 0)
+										System.out.println("Caution: voltage monitor at ground added");
+								}
+								else{
+									System.out.println("Error in adding voltage monitor");
+								}
+							}
 
+						}
+						
+						
+						
+						
+						else if(!command.equals("END_NETWORK")){
+							System.out.println("Unknown command: " + command);
+						}
+								
 						
 					} else {
 						System.out.println("Empty line detected");

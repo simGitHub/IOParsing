@@ -16,9 +16,6 @@ public class main {
 			String textFileName = args[0];
 			network = par.DefineNetwork(textFileName, network);
 			
-			// memristor (beUsedForState()) is utilized in IOParser class
-			network.addmonitor(1); //v1
-			network.addmonitor(2); //v2
 			System.out.println("Starting simulation");
 			network.operateNetwork(0.0, SIMULATION_TIME);
 			System.out.println("Simulation finished");
@@ -26,9 +23,9 @@ public class main {
 			
 			// get monitors
 			System.out.println("Extract gathered data from monitors");
-			ArrayList<Monitor> monitors = network.getMonitors(); //length should be 3+3=6
+			ArrayList<Monitor> monitors = network.getMonitors();
 			System.out.println("Length of array list is: " + monitors.size() );
-			String directory = "C:/Users/simon/eclipse-workspace/Simulator/Data";
+			String directory = "/users/simon/eclipse-workspace/simulator/src/data/";
 			
 			Monitor vMonitor1 = monitors.get(0);
 			Monitor vMonitor2 = monitors.get(1);
