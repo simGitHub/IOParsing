@@ -12,22 +12,25 @@ public class main {
 		IOParser par = new IOParser();
 		final int SIMULATION_TIME = 19;
 		if(args.length != 0) {
+			
 			Network network = null;
 			String textFileName = args[0];
 			network = par.DefineNetwork(textFileName, network);
-			
 			System.out.println("Starting simulation");
 			network.operateNetwork(0.0, SIMULATION_TIME);
 			System.out.println("Simulation finished");
 			
-			
-			// exctract all monitors, memristors to one 2D array and voltage to one 2D array, both arrays are exported to a 2D text file
+			// exctract all added monitors (each memristor have always a monitor) , memristors to one 2D array and voltage to one 2D array, both arrays are exported to a 2D text file
 			// index of column should correspond to the index of node
 			System.out.println("Extract gathered data from monitors");
 			ArrayList<Monitor> monitors = network.getMonitors();
-			System.out.println("Length of array list is: " + monitors.size() );
+			System.out.println("Length of monitor array list: " + monitors.size() );
 			String directory = "/users/simon/eclipse-workspace/simulator/src/data/";
 			
+			//int numberOfNodes = par.numberOfNodes;
+			//for(int i=0; i < numberOfNodes;i++) {
+			//	Monitor vMonitor1 = monitors.get(i);
+			//}
 			Monitor vMonitor1 = monitors.get(0);
 			Monitor vMonitor2 = monitors.get(1);
 			Monitor mMonitor1 = monitors.get(2);
@@ -44,6 +47,7 @@ public class main {
 			new savaToFile(v2, vStr2);
 			new savaToFile(m1, mStr1);
 			new savaToFile(m2, mStr2);
+			
 		}
 		
 		// runs if no textile input is given (for testing purpose)
@@ -51,8 +55,6 @@ public class main {
 			System.out.println("Missing input file name");
 			// test of simulator
 
-			
-			  
 		}	
 		
 		

@@ -19,12 +19,12 @@ import java.util.Random;
 
 
 public class IOParser{
+	int numberOfNodes = 0; // this variable needs to be seen by the main
 	public Network DefineNetwork(String textFileName, Network network) {
 		
 		// declaration of variables
 		BufferedReader br = null;
 		Random r = new Random();
-		int numberOfNodes = 0;
 		int nPosSource; int nNegSource; int numberOfAmpIndices; double[] ampls;	int DC_multiplier = 4;			
 		int nPos; int nNeg;
 		double alpha_mu = 1.0; double alpha_sigma = 0.4; double beta_mu = 10; double beta_sigma = 4.0;
@@ -32,17 +32,16 @@ public class IOParser{
 		double initR; double minR; double maxR;
 		double dt; String fileName; 
 		String dataSetDirectory = "/users/simon/eclipse-workspace/simulator/src/data/datasets/";
-		String monitorArgument; String extractMonitorArgument; String addMonitorArgument;
+		String monitorArgument; String addMonitorArgument;
 		ReadFromTextFile2DArray textToArrayReader = new ReadFromTextFile2DArray();
 		
 		try {
 			br = new BufferedReader(new FileReader(textFileName));
 			boolean END_NETWORK = false;
-			//boolean numberOfNodesSpecified = false;
 			String line = br.readLine();
 			
 			if(line.equals("BEGIN_NETWORK")) {
-				System.out.println("Starting to read text file");
+				System.out.println("Starting to read parser text file");
 				while(END_NETWORK != true) {
 					line = br.readLine();
 					
@@ -52,7 +51,7 @@ public class IOParser{
 					}
 					
 					else if(line.equals("END_NETWORK")){
-						System.out.println("Finished reading text file");
+						System.out.println("Finished reading parser text file");
 						END_NETWORK = true;
 					}
 					
@@ -62,13 +61,12 @@ public class IOParser{
 						StringTokenizer st = new StringTokenizer(line);
 						String command = st.nextToken();
 						
-						// Detects node command
+						// sets number of nodes
 						if(command.equals("#NODES")) {
 							numberOfNodes = Integer.parseInt(st.nextToken());
 							if(numberOfNodes > 0) {
 								network = new Network(numberOfNodes);
 								System.out.println("Number of nodes is set to " + numberOfNodes);
-								//numberOfNodesSpecified = true;
 							}
 							else {
 								System.out.println("Number of nodes must be greater than zero");
@@ -109,20 +107,20 @@ public class IOParser{
 							fileName = dataSetDirectory + fileName;
 							double[][] dataset = textToArrayReader.readInTheArray(fileName);
 							ampls = new double[0];
-							VoltageSource vd = new VoltageSource(ampls, numberOfNodes, nNegSource); // why not use same nodes for both sources? this needs some futher consideration
-							vd.toHaveConstantValue(-0.1); // what does this mean?
+							VoltageSource vd = new VoltageSource(ampls, numberOfNodes, nNegSource); // why not use same nodes for both sources? this needs some futher consideration. Not sure why I use numberOfNodes as passing argument.
+							vd.toHaveConstantValue(-0.1); // what does this mean? Probably DC value.
 							vd.defineDTtoSuggest(dt);
 							network.addsource(vd);
 							VoltageSourceDictated vg = new VoltageSourceDictated(ampls, nPosSource, nNegSource);
 							vg.dictate(dataset, 1);
 							vg.defineDTtoSuggest(dt);
 							network.addsource(vg);
-							System.out.println("Input voltage set between node " + nPosSource + " and " + nNegSource + ". Dataset from file " + fileName + " has been extracted and added as source");
+							System.out.println("Input voltage set between node " + nPosSource + " and " + nNegSource + ". Dataset from file " + fileName + " has been extracted and added as voltage source");
 						}
 
 
 								
-						// Detects memristor tokens and adds them to the network. Alpha and beta is drawned from normal distribution
+						// adds memristors to the network
 						else if(command.equals("ADD_MEM")) {
 							nPos = Integer.parseInt(st.nextToken(" ,"));
 							nNeg = Integer.parseInt(st.nextToken(",|"));
@@ -140,30 +138,15 @@ public class IOParser{
 							System.out.println(". Alpha is set to: " + alpha + ", and beta is set to: " + beta);
 						}
 						
-						// extract memristor and/or voltage monitors to text file of size m x n, where m is number of monitors and n is number of data points for given monitor
-						else if(command.equals("EXTRACT_MONITOR")) {
-							monitorArgument = st.nextToken(",");
-							extractMonitorArgument = st.nextToken();
-							if (monitorArgument.equals("memristor")){
-								if(extractMonitorArgument.equals("all")) {
-									
-								}
-							}
-							if (monitorArgument.equals("voltage")){
-								if(extractMonitorArgument.equals("all")) {
-									
-								}
-							}
-						}
-						
+						// adds voltage monitors
 						else if(command.equals("ADD_MONITOR")) {
 							monitorArgument = st.nextToken(" ,");
 							addMonitorArgument = st.nextToken();
 							if(monitorArgument.equals("voltage") & addMonitorArgument.equals("all")){
-								System.out.println("Voltage monitors added at every node" );
 								for(int i=1;i<=numberOfNodes;i++) {
 									network.addmonitor(i);
 								}
+								System.out.println("Voltage monitors added at every node" );
 							}
 							else if(monitorArgument.equals("voltage") & (!addMonitorArgument.equals("all"))) {
 								int i = Integer.parseInt(addMonitorArgument);
@@ -178,7 +161,13 @@ public class IOParser{
 								}
 							}
 
+						// for clarity surpose, memristor commands should be encapsulated by a BEGIN_MEM and END_MEM commands. 
 						}
+						else if(command.equals("BEGIN_MEM")) {
+							System.out.println("Starting to add memristors. Alpha and beta is drawned from a normal distribution where alpha has mu = " + alpha_mu + " and sigma = " + alpha_sigma + ". Beta is drawned with mu = " + beta_mu + " and sigma = " + beta_sigma + ". Mu stands for expected value, and sigma for standard deviation");
+						}
+						else if(command.equals("END_MEM"))
+							System.out.println("Finished adding memristors. A monitor has been added to each memristor.");
 						
 						
 						
@@ -212,7 +201,7 @@ public class IOParser{
 		}
 		
 		catch(FileNotFoundException fileReader){
-			System.out.println("Text file not found");
+			System.out.println("Parser text file not found");
 		}
 		catch(IOException readLine){
 			System.out.println("Error reading from file");
@@ -220,7 +209,6 @@ public class IOParser{
 		
 		if (br != null) try { br.close(); } catch (IOException e) {}
 		
-		// return statement, returns the created network object
 		return network;
 	}
 	
