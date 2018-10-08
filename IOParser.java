@@ -19,10 +19,13 @@ import java.util.Random;
 
 
 public class IOParser{
-	int numberOfNodes = 0; // this variable needs to be seen by the main
+	// these variable needs to be seen by the main
+	int numberOfMemristors = 0;
+	int numberOfVoltageMonitors = 0;
 	public Network DefineNetwork(String textFileName, Network network) {
 		
 		// declaration of variables
+		int numberOfNodes = 0;
 		BufferedReader br = null;
 		Random r = new Random();
 		int nPosSource; int nNegSource; int numberOfAmpIndices; double[] ampls;	int DC_multiplier = 4;			
@@ -41,7 +44,7 @@ public class IOParser{
 			String line = br.readLine();
 			
 			if(line.equals("BEGIN_NETWORK")) {
-				System.out.println("Starting to read parser text file");
+				System.out.println(" ** Starting to read parser text file ** ");
 				while(END_NETWORK != true) {
 					line = br.readLine();
 					
@@ -51,7 +54,7 @@ public class IOParser{
 					}
 					
 					else if(line.equals("END_NETWORK")){
-						System.out.println("Finished reading parser text file");
+						System.out.println(" ** Finished reading parser text file ** ");
 						END_NETWORK = true;
 					}
 					
@@ -133,9 +136,10 @@ public class IOParser{
 							memristor.beUsedForState();
 							network.addbranch(memristor);
 							System.out.print("Memristor added between node " + nPos + " and " + nNeg + " with initR = " + initR + 
-									", minR = " + minR + " and maxR = " + maxR + ". Also the v_tresh is: " + vthres);
+									", minR = " + minR + " and maxR = " + maxR + ". Also v_tresh = " + vthres);
 
 							System.out.println(". Alpha is set to: " + alpha + ", and beta is set to: " + beta);
+							numberOfMemristors = numberOfMemristors + 1;
 						}
 						
 						// adds voltage monitors
@@ -145,13 +149,15 @@ public class IOParser{
 							if(monitorArgument.equals("voltage") & addMonitorArgument.equals("all")){
 								for(int i=1;i<=numberOfNodes;i++) {
 									network.addmonitor(i);
+									numberOfVoltageMonitors = numberOfVoltageMonitors + 1;
 								}
-								System.out.println("Voltage monitors added at every node" );
+								System.out.println("Voltage monitor added at every node ");
 							}
 							else if(monitorArgument.equals("voltage") & (!addMonitorArgument.equals("all"))) {
 								int i = Integer.parseInt(addMonitorArgument);
 								if(i <= numberOfNodes & i >= 0) {
 									network.addmonitor(i);
+									numberOfVoltageMonitors = numberOfVoltageMonitors + 1;
 									System.out.println("Voltage monitor added at node " + i);
 									if(i == 0)
 										System.out.println("Caution: voltage monitor at ground added");
@@ -160,6 +166,7 @@ public class IOParser{
 									System.out.println("Error in adding voltage monitor");
 								}
 							}
+							System.out.println("Number of voltage monitors: " + numberOfVoltageMonitors);
 
 						// for clarity surpose, memristor commands should be encapsulated by a BEGIN_MEM and END_MEM commands. 
 						}

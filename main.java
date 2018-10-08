@@ -16,44 +16,38 @@ public class main {
 			Network network = null;
 			String textFileName = args[0];
 			network = par.DefineNetwork(textFileName, network);
-			System.out.println("Starting simulation");
+			System.out.println(" ** Starting simulation ** ");
 			network.operateNetwork(0.0, SIMULATION_TIME);
-			System.out.println("Simulation finished");
+			System.out.println(" ** Simulation finished ** ");
 			
-			// exctract all added monitors (each memristor have always a monitor) , memristors to one 2D array and voltage to one 2D array, both arrays are exported to a 2D text file
-			// index of column should correspond to the index of node
-			System.out.println("Extract gathered data from monitors");
+			// exctract all added monitors, memristors to one 2D text file and voltage to one 2D text file. One column corresponds to a value set.
+			System.out.println("Extract gathered data from all memristor and voltage monitors and export them to text files");
 			ArrayList<Monitor> monitors = network.getMonitors();
 			System.out.println("Length of monitor array list: " + monitors.size() );
 			String directory = "/users/simon/eclipse-workspace/simulator/src/data/";
+
+			int numberOfVoltageMonitors = par.numberOfVoltageMonitors;
+			int numberOfMemristors = par.numberOfMemristors;			
+			ArrayList<ArrayList<Double>> memristanceMatrix = new ArrayList<ArrayList<Double>>();
+			ArrayList<ArrayList<Double>> voltageMatrix = new ArrayList<ArrayList<Double>>();
 			
-			//int numberOfNodes = par.numberOfNodes;
-			//for(int i=0; i < numberOfNodes;i++) {
-			//	Monitor vMonitor1 = monitors.get(i);
-			//}
-			Monitor vMonitor1 = monitors.get(0);
-			Monitor vMonitor2 = monitors.get(1);
-			Monitor mMonitor1 = monitors.get(2);
-			Monitor mMonitor2 = monitors.get(3);
-			ArrayList<Double> v1 = vMonitor1.getValues();
-			ArrayList<Double> v2 = vMonitor2.getValues();
-			ArrayList<Double> m1 = mMonitor1.getValues();
-			ArrayList<Double> m2 = mMonitor2.getValues();
-			String vStr1 = directory + "/v1.txt";
-			String vStr2 = directory + "/v2.txt";
-			String mStr1 = directory + "/m1.txt";
-			String mStr2 = directory + "/m2.txt";
-			new savaToFile(v1, vStr1);
-			new savaToFile(v2, vStr2);
-			new savaToFile(m1, mStr1);
-			new savaToFile(m2, mStr2);
+			for(int i=0;i<numberOfVoltageMonitors;i++) {
+				ArrayList<Double> voltageValues = monitors.get(i).getValues();
+				voltageMatrix.add(voltageValues);
+			}
+			for(int i=numberOfVoltageMonitors;i<(numberOfVoltageMonitors + numberOfMemristors);i++) {
+				ArrayList<Double> memristanceValues = monitors.get(i).getValues();
+				memristanceMatrix.add(memristanceValues);
+			}
+			String mStr = directory + "/memristanceValues.txt";
+			String vStr = directory + "/voltageValues.txt";
+			new ExportMatrix(mStr, memristanceMatrix);
+			new ExportMatrix(vStr, voltageMatrix);
 			
 		}
 		
-		// runs if no textile input is given (for testing purpose)
 		else {
-			System.out.println("Missing input file name");
-			// test of simulator
+			System.out.println("Missing argument for input file name");
 
 		}	
 		

@@ -1,10 +1,10 @@
-v1 = load("v1.txt");
-m2 = load('m2.txt');
-m1 = load('m1.txt');
+clear;clc;clf;
+m = load("memristanceValues.txt");
+v = load('voltageValues.txt');
+m = m';
+v = v';
 
-hold on
-figure(1)
-plot(v1,m1);
+plot(m(:,1));
 
 
 
