@@ -171,12 +171,15 @@ public class IOParser{
 						// for clarity surpose, memristor commands should be encapsulated by a BEGIN_MEM and END_MEM commands. 
 						}
 						else if(command.equals("BEGIN_MEM")) {
-							System.out.println("Starting to add memristors. Alpha and beta is drawned from a normal distribution where alpha has mu = " + alpha_mu + " and sigma = " + alpha_sigma + ". Beta is drawned with mu = " + beta_mu + " and sigma = " + beta_sigma + ". Mu stands for expected value, and sigma for standard deviation");
+							System.out.println(" ** Starting to add memristors. Alpha and beta is drawned from a normal distribution where alpha has mu = " + alpha_mu + " and sigma = " + alpha_sigma + ". Beta is drawned with mu = " + beta_mu + " and sigma = " + beta_sigma + ". Mu stands for expected value, and sigma for standard deviation");
 						}
 						else if(command.equals("END_MEM"))
-							System.out.println("Finished adding memristors. A monitor has been added to each memristor.");
+							System.out.println(" ** Finished adding memristors. A monitor has been added to each memristor.");
 						
-						
+						else if(command.equals("SET_VTHRES")) {
+							vthres = Double.parseDouble(st.nextToken());
+							System.out.println("voltage threshold set to " + vthres);
+						}
 						
 						
 						else if(!command.equals("END_NETWORK")){

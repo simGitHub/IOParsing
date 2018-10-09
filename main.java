@@ -21,7 +21,7 @@ public class main {
 			System.out.println(" ** Simulation finished ** ");
 			
 			// exctract all added monitors, memristors to one 2D text file and voltage to one 2D text file. One column corresponds to a value set.
-			System.out.println("Extract gathered data from all memristor and voltage monitors and export them to text files");
+			System.out.println("Extracting gathered data from all memristor and voltage monitors and exporting them to text files");
 			ArrayList<Monitor> monitors = network.getMonitors();
 			System.out.println("Length of monitor array list: " + monitors.size() );
 			String directory = "/users/simon/eclipse-workspace/simulator/src/data/";
