@@ -22,7 +22,8 @@ public class IOParser{
 	// these variable needs to be seen by the main
 	int numberOfMemristors = 0;
 	int numberOfVoltageMonitors = 0;
-	public Network DefineNetwork(String textFileName, Network network) {
+	VoltageSourceDictated vg;
+	public Network DefineNetwork(String configFile, Network network) {
 		
 		// declaration of variables
 		int numberOfNodes = 0;
@@ -30,16 +31,14 @@ public class IOParser{
 		Random r = new Random();
 		int nPosSource; int nNegSource; int numberOfAmpIndices; double[] ampls;	int DC_multiplier = 4;			
 		int nPos; int nNeg;
-		double alpha_mu = 1.0; double alpha_sigma = 0.4; double beta_mu = 10; double beta_sigma = 4.0;
+		double alpha_mu = 1.0; double beta_mu = 10.0; double muSigmaRatio = 0.4; double beta_sigma = beta_mu * muSigmaRatio; double alpha_sigma = alpha_mu * muSigmaRatio;
 		double alpha; double beta; double vthres = 0.4;
-		double initR; double minR; double maxR;
-		double dt; String fileName; 
-		String dataSetDirectory = "/users/simon/eclipse-workspace/simulator/src/data/datasets/";
+		double initR; double minR; double maxR; 
 		String monitorArgument; String addMonitorArgument;
-		ReadFromTextFile2DArray textToArrayReader = new ReadFromTextFile2DArray();
+		
 		
 		try {
-			br = new BufferedReader(new FileReader(textFileName));
+			br = new BufferedReader(new FileReader(configFile));
 			boolean END_NETWORK = false;
 			String line = br.readLine();
 			
@@ -102,19 +101,12 @@ public class IOParser{
 						}
 						
 						// sets voltage source from data file
-						else if(command.equals("DATA_INPUT")){
-							dt = 0.01;
+						else if(command.equals("ADD_DATASOURCE")){
 							nPosSource = Integer.parseInt(st.nextToken(" ,"));
 							nNegSource = Integer.parseInt(st.nextToken(",|"));
-							fileName = st.nextToken();
-							fileName = dataSetDirectory + fileName;
-							double[][] dataset = textToArrayReader.readInTheArray(fileName);
 							ampls = new double[0];
-							VoltageSourceDictated vg = new VoltageSourceDictated(ampls, nPosSource, nNegSource);
-							vg.dictate(dataset, 1);
-							vg.defineDTtoSuggest(dt);
-							network.addsource(vg);
-							System.out.println("Input voltage set between node " + nPosSource + " and " + nNegSource + ". Dataset from file " + fileName + " has been extracted and added as voltage source");
+							vg = new VoltageSourceDictated(ampls, nPosSource, nNegSource);
+							System.out.println("Source for data input set between node " + nPosSource + " and " + nNegSource);
 						}
 
 
@@ -126,9 +118,11 @@ public class IOParser{
 							initR = Double.parseDouble(st.nextToken("|,"));
 							minR = Double.parseDouble(st.nextToken());
 							maxR = Double.parseDouble(st.nextToken());
+							alpha_sigma = alpha_mu * muSigmaRatio;
+							beta_sigma = beta_mu * muSigmaRatio;
 							alpha = r.nextGaussian()*alpha_sigma + alpha_mu;
 							beta = r.nextGaussian()*beta_sigma + beta_mu;
-							Memristor memristor = new Memristor(initR, maxR, minR, 1, 10, vthres, nPos, nNeg);
+							Memristor memristor = new Memristor(initR, maxR, minR, alpha, beta, vthres, nPos, nNeg);
 							memristor.beUsedForState();
 							network.addbranch(memristor);
 							System.out.print("Memristor added between node " + nPos + " and " + nNeg + " with initR = " + initR + 
@@ -175,6 +169,14 @@ public class IOParser{
 						else if(command.equals("SET_VTHRES")) {
 							vthres = Double.parseDouble(st.nextToken());
 							System.out.println("voltage threshold set to " + vthres);
+						}
+						else if(command.equals("SET_ALPHA_MU")) {
+							alpha_mu = Double.parseDouble(st.nextToken());
+							alpha_sigma = alpha_mu * muSigmaRatio;
+						}
+						else if(command.equals("SET_BETA_MU")) {
+							beta_mu = Double.parseDouble(st.nextToken());
+							beta_sigma = beta_mu * muSigmaRatio;
 						}
 						
 						

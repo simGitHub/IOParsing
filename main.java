@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import testing.savaToFile;
 import circuitNetwork.*;
 
 public class main {
@@ -9,39 +8,35 @@ public class main {
 		
 
 		// End of temporary code
-		IOParser par = new IOParser();
 		final int SIMULATION_TIME = 19;
+		IOParser par = new IOParser();
+		String saveFolder; String datasetFileName; double dt; String dataType;
 		if(args.length != 0) {
-			
+			String datasetDirectory = "/users/simon/eclipse-workspace/simulator/src/data/datasets/";
 			Network network = null;
-			String textFileName = args[0];
-			network = par.DefineNetwork(textFileName, network);
-			System.out.println(" ** Starting simulation ** ");
-			network.operateNetwork(0.0, SIMULATION_TIME);
-			System.out.println(" ** Simulation finished ** ");
 			
+			String configFile = args[0];
+			network = par.DefineNetwork(configFile, network);
 			
-			// exctract all added monitors, memristors to one 2D text file and voltage to one 2D text file. One column corresponds to a value set.
-			System.out.println("Extracting gathered data from all memristor and voltage monitors and exporting them to text files");
-			ArrayList<Monitor> monitors = network.getMonitors();
-			System.out.println("Length of monitor array list: " + monitors.size() );
-			String directory = "/users/simon/eclipse-workspace/simulator/src/data/";
-			int numberOfVoltageMonitors = par.numberOfVoltageMonitors;
-			int numberOfMemristors = par.numberOfMemristors;			
-			ArrayList<ArrayList<Double>> memristanceMatrix = new ArrayList<ArrayList<Double>>();
-			ArrayList<ArrayList<Double>> voltageMatrix = new ArrayList<ArrayList<Double>>();
-			for(int i=0;i<numberOfVoltageMonitors;i++) {
-				ArrayList<Double> voltageValues = monitors.get(i).getValues();
-				voltageMatrix.add(voltageValues);
-			}
-			for(int i=numberOfVoltageMonitors;i<(numberOfVoltageMonitors + numberOfMemristors);i++) {
-				ArrayList<Double> memristanceValues = monitors.get(i).getValues();
-				memristanceMatrix.add(memristanceValues);
-			}
-			String mStr = directory + "/memristanceValues.txt";
-			String vStr = directory + "/voltageValues.txt";
-			new ExportMatrix(mStr, memristanceMatrix);
-			new ExportMatrix(vStr, voltageMatrix);	
+			// simulate with triangle signal
+			dataType = "triangle";
+			saveFolder = dataType;
+			datasetFileName = dataType + ".txt";
+			datasetFileName = datasetDirectory + datasetFileName;
+			dt = 0.01;
+			new SimulateNetwork(network, datasetFileName, dt, par, saveFolder, SIMULATION_TIME);
+			
+			// simulate with square signal
+			//network.resetMonitors();
+			network.resetSources();
+			dataType = "square";
+			saveFolder = dataType;
+			datasetFileName = dataType + ".txt";
+			datasetFileName = datasetDirectory + datasetFileName;
+			dt = 0.01;
+			new SimulateNetwork(network, datasetFileName, dt, par, saveFolder, SIMULATION_TIME);
+		
+			
 		}
 		
 		else {

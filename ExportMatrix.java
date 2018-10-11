@@ -21,8 +21,7 @@ public class ExportMatrix {
 	        	bw.newLine();
 	        }
 	        bw.flush();
-	    } catch (IOException e) {}
-		
+	    } catch (IOException e) {System.out.println("Error: probably the directory does not exist");}
+	System.out.println("Data saved in " + filename);	
 	}
-
 }
