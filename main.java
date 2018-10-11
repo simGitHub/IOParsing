@@ -20,17 +20,16 @@ public class main {
 			network.operateNetwork(0.0, SIMULATION_TIME);
 			System.out.println(" ** Simulation finished ** ");
 			
+			
 			// exctract all added monitors, memristors to one 2D text file and voltage to one 2D text file. One column corresponds to a value set.
 			System.out.println("Extracting gathered data from all memristor and voltage monitors and exporting them to text files");
 			ArrayList<Monitor> monitors = network.getMonitors();
 			System.out.println("Length of monitor array list: " + monitors.size() );
 			String directory = "/users/simon/eclipse-workspace/simulator/src/data/";
-
 			int numberOfVoltageMonitors = par.numberOfVoltageMonitors;
 			int numberOfMemristors = par.numberOfMemristors;			
 			ArrayList<ArrayList<Double>> memristanceMatrix = new ArrayList<ArrayList<Double>>();
 			ArrayList<ArrayList<Double>> voltageMatrix = new ArrayList<ArrayList<Double>>();
-			
 			for(int i=0;i<numberOfVoltageMonitors;i++) {
 				ArrayList<Double> voltageValues = monitors.get(i).getValues();
 				voltageMatrix.add(voltageValues);
@@ -42,8 +41,7 @@ public class main {
 			String mStr = directory + "/memristanceValues.txt";
 			String vStr = directory + "/voltageValues.txt";
 			new ExportMatrix(mStr, memristanceMatrix);
-			new ExportMatrix(vStr, voltageMatrix);
-			
+			new ExportMatrix(vStr, voltageMatrix);	
 		}
 		
 		else {

@@ -110,10 +110,6 @@ public class IOParser{
 							fileName = dataSetDirectory + fileName;
 							double[][] dataset = textToArrayReader.readInTheArray(fileName);
 							ampls = new double[0];
-							VoltageSource vd = new VoltageSource(ampls, numberOfNodes, nNegSource); // why not use same nodes for both sources? this needs some futher consideration. Not sure why I use numberOfNodes as passing argument.
-							vd.toHaveConstantValue(-0.1); // what does this mean? Probably DC value.
-							vd.defineDTtoSuggest(dt);
-							network.addsource(vd);
 							VoltageSourceDictated vg = new VoltageSourceDictated(ampls, nPosSource, nNegSource);
 							vg.dictate(dataset, 1);
 							vg.defineDTtoSuggest(dt);
@@ -132,7 +128,7 @@ public class IOParser{
 							maxR = Double.parseDouble(st.nextToken());
 							alpha = r.nextGaussian()*alpha_sigma + alpha_mu;
 							beta = r.nextGaussian()*beta_sigma + beta_mu;
-							Memristor memristor = new Memristor(initR, maxR, minR, alpha, beta, vthres, nPos, nNeg);
+							Memristor memristor = new Memristor(initR, maxR, minR, 1, 10, vthres, nPos, nNeg);
 							memristor.beUsedForState();
 							network.addbranch(memristor);
 							System.out.print("Memristor added between node " + nPos + " and " + nNeg + " with initR = " + initR + 

@@ -3,9 +3,19 @@ m = load("memristanceValues.txt");
 v = load('voltageValues.txt');
 m = m';
 v = v';
+% v_diff = abs(v(:,2) - v(:,1));
+% disp(max(abs(v_diff)));
+% disp(max(abs(v(:,2))));
 
-
+figure(1)
 plot(m(:,2),m(:,1));
+
+
+% figure(2)
+% plot(m(:,1))
+% hold on
+% plot(m(:,2))
+
 
 
 
@@ -13,7 +23,7 @@ plot(m(:,2),m(:,1));
 
 %% square and triangular wave generation
 clear;clc;clf;
-dt=0.01; T = 40;
+dt=0.01; T = 20;
 t = 0:dt:T;
 square = square(t*4);
 triangle = sawtooth(t*4,0.5);
