@@ -32,7 +32,7 @@ public class IOParser{
 		int nPosSource; int nNegSource; int numberOfAmpIndices; double[] ampls;	int DC_multiplier = 4;			
 		int nPos; int nNeg;
 		double alpha_mu = 1.0; double beta_mu = 10.0; double muSigmaRatio = 0.4; double beta_sigma = beta_mu * muSigmaRatio; double alpha_sigma = alpha_mu * muSigmaRatio;
-		double alpha; double beta; double vthres = 0.4;
+		double alpha; double beta; double vthresh = 0.4;
 		double initR; double minR; double maxR; 
 		String monitorArgument; String addMonitorArgument;
 		
@@ -118,15 +118,13 @@ public class IOParser{
 							initR = Double.parseDouble(st.nextToken("|,"));
 							minR = Double.parseDouble(st.nextToken());
 							maxR = Double.parseDouble(st.nextToken());
-							alpha_sigma = alpha_mu * muSigmaRatio;
-							beta_sigma = beta_mu * muSigmaRatio;
 							alpha = r.nextGaussian()*alpha_sigma + alpha_mu;
 							beta = r.nextGaussian()*beta_sigma + beta_mu;
-							Memristor memristor = new Memristor(initR, maxR, minR, alpha, beta, vthres, nPos, nNeg);
+							Memristor memristor = new Memristor(initR, maxR, minR, alpha, beta, vthresh, nPos, nNeg);
 							memristor.beUsedForState();
 							network.addbranch(memristor);
 							System.out.print("Memristor added between node " + nPos + " and " + nNeg + " with initR = " + initR + 
-									", minR = " + minR + " and maxR = " + maxR + ". Also v_tresh = " + vthres);
+									", minR = " + minR + " and maxR = " + maxR + ". Also v_thresh = " + vthresh);
 
 							System.out.println(". Alpha is set to: " + alpha + ", and beta is set to: " + beta);
 							numberOfMemristors = numberOfMemristors + 1;
@@ -166,9 +164,9 @@ public class IOParser{
 						else if(command.equals("END_MEM"))
 							System.out.println(" ** Finished adding memristors. A monitor has been added to each memristor.");
 						
-						else if(command.equals("SET_VTHRES")) {
-							vthres = Double.parseDouble(st.nextToken());
-							System.out.println("voltage threshold set to " + vthres);
+						else if(command.equals("SET_VTHRESH")) {
+							vthresh = Double.parseDouble(st.nextToken());
+							System.out.println("voltage threshold set to " + vthresh);
 						}
 						else if(command.equals("SET_ALPHA_MU")) {
 							alpha_mu = Double.parseDouble(st.nextToken());

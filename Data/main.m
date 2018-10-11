@@ -30,8 +30,6 @@ plot(m(:,2),m(:,1),'r');
 hold off
 
 
-
-
 %% test analysis of data
 
 clear;clc;clf;

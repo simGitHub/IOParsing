@@ -27,7 +27,6 @@ public class main {
 			new SimulateNetwork(network, datasetFileName, dt, par, saveFolder, SIMULATION_TIME);
 			
 			// simulate with square signal
-			//network.resetMonitors();
 			network.resetSources();
 			dataType = "square";
 			saveFolder = dataType;
