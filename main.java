@@ -10,30 +10,29 @@ public class main {
 		// End of temporary code
 		final int SIMULATION_TIME = 19;
 		IOParser par = new IOParser();
-		String saveFolder; String datasetFileName; double dt; String dataType;
 		if(args.length != 0) {
-			String datasetDirectory = "/users/simon/eclipse-workspace/simulator/src/data/datasets/";
+			String directory = "/users/simon/eclipse-workspace/simulator/src/data/";
+			String dataDirectory = directory + "datasets/square/modified/frequency/";
+			String saveDirectory = directory + "storedResults/square/modified/frequency/";
+			
+			String saveFileDir; String dataFileDir; String dataType;
+			double dt = 0.01;
 			Network network = null;
 			
 			String configFile = args[0];
 			network = par.DefineNetwork(configFile, network);
 			
-			// simulate with triangle signal
-			dataType = "triangle";
-			saveFolder = dataType;
-			datasetFileName = dataType + ".txt";
-			datasetFileName = datasetDirectory + datasetFileName;
-			dt = 0.01;
-			new SimulateNetwork(network, datasetFileName, dt, par, saveFolder, SIMULATION_TIME);
+			dataType = "square_1";
+			dataFileDir = dataDirectory + dataType + ".txt";
+			saveFileDir = saveDirectory + dataType + "/";
+			new SimulateNetwork(network, dataFileDir, saveFileDir, dt, par, SIMULATION_TIME);
 			
 			// simulate with square signal
-			network.resetSources();
-			dataType = "square";
-			saveFolder = dataType;
-			datasetFileName = dataType + ".txt";
-			datasetFileName = datasetDirectory + datasetFileName;
-			dt = 0.01;
-			new SimulateNetwork(network, datasetFileName, dt, par, saveFolder, SIMULATION_TIME);
+			network.resetSources(); 
+			dataType = "square_2";
+			dataFileDir = dataDirectory + dataType + ".txt";
+			saveFileDir = saveDirectory + dataType + "/";
+			new SimulateNetwork(network, dataFileDir, saveFileDir, dt, par, SIMULATION_TIME);
 		
 			
 		}

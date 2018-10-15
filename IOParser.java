@@ -13,9 +13,7 @@
 import java.io.*;
 import java.util.*;
 import circuitNetwork.*;
-import circuitNetwork.TwoPortElement;
 import readData.ReadFromTextFile2DArray;
-import java.util.Random;
 
 
 public class IOParser{

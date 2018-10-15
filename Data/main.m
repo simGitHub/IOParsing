@@ -1,33 +1,35 @@
 clear;clc;clf;
 
-dataset = "triangle";
-directory = "storedResults/" + dataset;
-m = load(directory + "/memristance.txt");
-v = load(directory + "/voltage.txt");
+dataset = "square_1/";
+directory = "storedResults/square/modified/frequency/" + dataset;
+m = load(directory + "memristance.txt");
+v = load(directory + "voltage.txt");
 m = m';
 v = v';
 figure(1)
-plot(m(:,1))
+plot(m(:,1),'b')
 hold on
-plot(m(:,2))
+plot(m(:,2),'b')
 figure(2)
 plot(m(:,2),m(:,1),'b');
 hold on
 
-dataset = "square";
-directory = "storedResults/" + dataset;
+dataset = "square_2/";
+directory = "storedResults/square/modified/frequency/" + dataset;
 m = load(directory + "/memristance.txt");
 v = load(directory + "/voltage.txt");
 m = m';
 v = v';
 
 figure(1)
-plot(m(:,1))
-plot(m(:,2))
+plot(m(:,1),'r')
+plot(m(:,2),'r')
 hold off
 figure(2)
 plot(m(:,2),m(:,1),'r');
 hold off
+
+
 
 
 %% test analysis of data
@@ -75,17 +77,36 @@ M_triangle(:,1) = t;
 dlmwrite('square.txt',M_square, ' ')
 dlmwrite('triangle.txt',M_triangle, ' ')
 
+
+%% modified square wave generator
+
+clear;clc;clf;
+dt=0.01; T = 30;
+t = 0:dt:T;
+omega = 2;
+square = square(t*omega);
+delay = 0.8 * 100;
+square_mod = square(delay:length(square));
+t_mod = t(1:length(t)-delay+1);
+
+invert = 1;
+square_mod = invert * square_mod;
+hold on
+plot(t_mod,square_mod)
+hold off
+
+M_square = zeros(length(t_mod),2);
+M_square(:,2) = square_mod;
+M_square(:,1) = t_mod;
+dlmwrite('/users/simon/eclipse-workspace/simulator/src/data/datasets/modifiedSquare/timeDelay/squareOrigin_delay.txt',M_square, ' ')
+
+
 %% Test of dataset
 load('dataset.csv')
 
-%% temp code 2
+%% plot code
+clc;clf;clear;
 
-T = 10*(1/50);
-Fs = 1000;
-dt = 1/Fs;
-t = 0:dt:T-dt;
-x = sawtooth(2*pi*50*t,0.5);
-plot(t,x)
+square = load('square_1.txt');
 
-plot(t,x)
-grid on
+plot(square(:,2))
