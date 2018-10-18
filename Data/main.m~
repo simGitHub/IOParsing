@@ -4,6 +4,7 @@ dir = "square/";
 
 dataset = "square_2";
 m = load(dir + dataset + "/memristance.txt"); m = m';
+figure(2); plot(m(:,2)); hold on
 figure(1); plot(m(:,2),m(:,1)); hold on;
 pause(0.5)
 
@@ -17,7 +18,6 @@ pause(0.5)
 dir = "triangle/";
 dataset = "triangle_2";
 m = load(dir + dataset + "/memristance.txt"); m = m';
-d = load(dir + dataset + "/" + dataset + ".txt"); figure(2); plot(d(:,2)); hold on;
 figure(1); plot(m(:,2),m(:,1));
 pause(0.5)
 
@@ -26,15 +26,15 @@ m = load(dir + dataset + "/memristance.txt"); m = m';
 figure(1); plot(m(:,2),m(:,1));
 
 
-dataset = "triangle_2_amped";
-m = load(dir + dataset + "/memristance.txt"); m = m';
-d = load(dir + dataset + "/" + dataset + ".txt"); figure(2); plot(d(:,2));
-figure(1); plot(m(:,2),m(:,1));
-pause(0.5)
-
+% dataset = "triangle_2_amped";
+% m = load(dir + dataset + "/memristance.txt"); m = m';
+% figure(1); plot(m(:,2),m(:,1));
+% pause(0.5)
+% 
 dir = "square/";
 dataset = "square_2_dim";
 m = load(dir + dataset + "/memristance.txt"); m = m';
+d = load(dir + dataset + "/" + dataset + ".txt"); figure(2); plot(m(:,2)); hold off
 figure(1); plot(m(:,2),m(:,1)); hold off;
 pause(0.5)
 

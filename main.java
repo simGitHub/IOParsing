@@ -11,30 +11,29 @@ public class main {
 		final int SIMULATION_TIME = 19;
 		IOParser par = new IOParser();
 		if(args.length != 0) {
-			String directory = "/users/simon/eclipse-workspace/simulator/src/data/";
-			String dataDirectory = directory + "datasets/square/modified/frequency/";
-			String saveDirectory = directory + "storedResults/square/modified/frequency/";
-			
-			String saveFileDir; String dataFileDir; String dataType;
-			double dt = 0.01;
-			Network network = null;
-			
-			String configFile = args[0];
+			String directory = "/users/simon/eclipse-workspace/simulator/src/data/par/";
+			String dataName; double dt = 0.01; String dataDir;
+			Network network = null; String configFile = args[0];
 			network = par.DefineNetwork(configFile, network);
 			
-			dataType = "square_1";
-			dataFileDir = dataDirectory + dataType + ".txt";
-			saveFileDir = saveDirectory + dataType + "/";
-			new SimulateNetwork(network, dataFileDir, saveFileDir, dt, par, SIMULATION_TIME);
 			
-			// simulate with square signal
-			network.resetSources(); 
-			dataType = "square_2";
-			dataFileDir = dataDirectory + dataType + ".txt";
-			saveFileDir = saveDirectory + dataType + "/";
-			new SimulateNetwork(network, dataFileDir, saveFileDir, dt, par, SIMULATION_TIME);
-		
+			dataDir = directory + "/square/";
+			dataName = "square_2";
+			new SimulateNetwork(network, par, dataDir, dataName, dt, SIMULATION_TIME);
+			dataName = "square_4";
+			new SimulateNetwork(network, par, dataDir, dataName, dt, SIMULATION_TIME);
+			dataName = "square_2_dim";
+			new SimulateNetwork(network, par, dataDir, dataName, dt, SIMULATION_TIME);
 			
+			dataDir = directory + "/triangle/";
+			dataName = "triangle_2";
+			new SimulateNetwork(network, par, dataDir, dataName, dt, SIMULATION_TIME);
+			dataName = "triangle_4";
+			new SimulateNetwork(network, par, dataDir, dataName, dt, SIMULATION_TIME);
+			dataName = "triangle_2_amped";
+			new SimulateNetwork(network, par, dataDir, dataName, dt, SIMULATION_TIME);
+
+
 		}
 		
 		else {

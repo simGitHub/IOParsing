@@ -4,9 +4,12 @@ import circuitNetwork.*;
 import readData.ReadFromTextFile2DArray;
 
 public class SimulateNetwork {
-	public SimulateNetwork(Network network, String dataFileDir, String saveFileDir, double dt, IOParser par, int SIMULATION_TIME) {
+	public SimulateNetwork(Network network, IOParser par, String dataDir, String dataName, double dt, int SIMULATION_TIME) {
+		network.resetSources(); // needed network sources
 		ReadFromTextFile2DArray textToArrayReader = new ReadFromTextFile2DArray();
 		VoltageSourceDictated vg = par.vg;
+		String dataFileDir = dataDir + dataName + "/" + dataName + ".txt";
+		String saveFileDir = dataDir + dataName + "/";
 		
 		System.out.println("Reading dataset: " + dataFileDir);
 		double[][] dataset = textToArrayReader.readInTheArray(dataFileDir);
@@ -36,6 +39,7 @@ public class SimulateNetwork {
 		String vStr = saveFileDir + "voltage.txt";
 		new ExportMatrix(mStr, memristanceMatrix);
 		new ExportMatrix(vStr, voltageMatrix);
+		System.out.println();
 		
 	}
 }
