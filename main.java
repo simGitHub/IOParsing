@@ -25,6 +25,7 @@ public class main {
 			dataName = "square_2_dim";
 			new SimulateNetwork(network, par, dataDir, dataName, dt, SIMULATION_TIME);
 			
+			//
 			dataDir = directory + "/triangle/";
 			dataName = "triangle_2";
 			new SimulateNetwork(network, par, dataDir, dataName, dt, SIMULATION_TIME);
