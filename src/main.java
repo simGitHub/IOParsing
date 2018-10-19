@@ -20,24 +20,12 @@ public class main {
 			dataDir = directory + "/square/";
 			dataName = "square_2";
 			new SimulateNetwork(network, par, dataDir, dataName, dt, SIMULATION_TIME);
-			dataName = "square_2_amp09";
-			new SimulateNetwork(network, par, dataDir, dataName, dt, SIMULATION_TIME);
-			dataName = "square_4";
-			new SimulateNetwork(network, par, dataDir, dataName, dt, SIMULATION_TIME);
 
-			
 			//
 			dataDir = directory + "/triangle/";
 			dataName = "triangle_2";
 			new SimulateNetwork(network, par, dataDir, dataName, dt, SIMULATION_TIME);
-			dataName = "triangle_4";
-			new SimulateNetwork(network, par, dataDir, dataName, dt, SIMULATION_TIME);
-			dataName = "triangle_8";
-			new SimulateNetwork(network, par, dataDir, dataName, dt, SIMULATION_TIME);
-			dataName = "triangle_16";
-			new SimulateNetwork(network, par, dataDir, dataName, dt, SIMULATION_TIME);
-			dataName = "triangle_2_amp2";
-			new SimulateNetwork(network, par, dataDir, dataName, dt, SIMULATION_TIME);
+
 
 		}
 		
