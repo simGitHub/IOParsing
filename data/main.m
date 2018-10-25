@@ -3,24 +3,15 @@ pause_time = 1;
 
 
 
-dir = "square/";
-dataset = "square_2";
+dir = "preset/series/";
+dataset = "square";
 m = load(dir + dataset + "/memristance.txt"); m = m';
 figure(1); plot(m(:,1),m(:,2)); hold on;
-%scatter( m(:,2)./m(:,1) ,ones(length(m(:,1)),1),'*'); hold on;
+plot(m(:,1),m(:,4)); 
+plot(m(:,1),m(:,6));
+plot(m(:,3),m(:,8)); 
+plot(m(:,12),m(:,4)); 
 pause(pause_time)
-
-
-
-dir = "triangle/";
-dataset = "triangle_2";
-m = load(dir + dataset + "/memristance.txt"); m = m';
-figure(1); plot(m(:,1),m(:,2));
-%scatter( m(:,2)./m(:,1) ,ones(length(m(:,1)),1),'*');
-%pause(pause_time)
-
-
-
 
 
 

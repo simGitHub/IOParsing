@@ -11,20 +11,14 @@ public class main {
 		final int SIMULATION_TIME = 19;
 		IOParser par = new IOParser();
 		if(args.length != 0) {
-			String directory = "/users/simon/eclipse-workspace/simulator/src/data/par/";
-			String dataName; double dt = 0.01; String dataDir;
+			String directory = "/users/simon/eclipse-workspace/simulator/src/data/preset/series/";
+			String dataName; double dt = 0.01; //String dataDir;
 			Network network = null; String configFile = args[0];
 			network = par.DefineNetwork(configFile, network);
 			
 			
-			dataDir = directory + "/square/";
-			dataName = "square_2";
-			new SimulateNetwork(network, par, dataDir, dataName, dt, SIMULATION_TIME);
-
-			//
-			dataDir = directory + "/triangle/";
-			dataName = "triangle_2";
-			new SimulateNetwork(network, par, dataDir, dataName, dt, SIMULATION_TIME);
+			dataName = "square";
+			new SimulateNetwork(network, par, directory, dataName, dt, SIMULATION_TIME);
 
 
 		}

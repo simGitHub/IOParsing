@@ -18,12 +18,14 @@ import readData.ReadFromTextFile2DArray;
 
 public class IOParser{
 	// these variable needs to be seen by the main
+	int amplifierValue = 0;
 	int numberOfMemristors = 0;
 	int numberOfVoltageMonitors = 0;
 	VoltageSourceDictated vg;
 	public Network DefineNetwork(String configFile, Network network) {
 		
 		// declaration of variables
+		String preset = null; int presetSize = 0;
 		int numberOfNodes = 0;
 		BufferedReader br = null;
 		Random r = new Random();
@@ -32,6 +34,7 @@ public class IOParser{
 		double alpha_mu = 1.0; double beta_mu = 10.0; double muSigmaRatio = 0.4; double beta_sigma = beta_mu * muSigmaRatio; double alpha_sigma = alpha_mu * muSigmaRatio;
 		double alpha; double beta; double vthresh = 0.4;
 		double initR; double minR; double maxR; 
+		double initR_default = 4; double minR_default = 2; double maxR_default = 8;
 		String monitorArgument; String addMonitorArgument;
 		
 		
@@ -56,7 +59,7 @@ public class IOParser{
 					}
 					
 					
-					// reads command token, as long as the line is not empty
+
 					if(!line.isEmpty()) { 
 						StringTokenizer st = new StringTokenizer(line);
 						String command = st.nextToken();
@@ -68,6 +71,7 @@ public class IOParser{
 								network = new Network(numberOfNodes);
 								System.out.println("Number of nodes is set to " + numberOfNodes);
 							}
+							
 							else {
 								System.out.println("Number of nodes must be greater than zero");
 							}
@@ -169,14 +173,88 @@ public class IOParser{
 						}
 						else if(command.equals("SET_ALPHA_MU")) {
 							alpha_mu = Double.parseDouble(st.nextToken());
+							System.out.println("alpha_mu set to " + alpha_mu);
 						}
 						else if(command.equals("SET_BETA_MU")) {
 							beta_mu = Double.parseDouble(st.nextToken());
+							System.out.println("beta_mu set to " + beta_mu);
 						}
 						
 						else if(command.equals("SET_MU_SIGMA_RATIO")) {
 							muSigmaRatio = Double.parseDouble(st.nextToken());
 						}
+						
+						else if(command.equals("ARCH_TYPE")) {
+							if(st.nextToken().equals("preset")){
+								System.out.println("preset option selected, network should be built using preset architecture");
+							}
+							else if(st.nextToken().equals("manual")) {
+								System.out.println("manual option selected, network should be built using manual commands, therefore number of nodes command must be used");
+							}
+							
+						}
+						
+						else if(command.equals("SET_PRESET_TYPE")) {
+							preset = st.nextToken();
+							System.out.println("Chosen preset type: " + preset);
+						}
+						
+						else if(command.equals("SET_PRESET_SIZE")) {
+							presetSize = Integer.parseInt(st.nextToken());
+							System.out.println("Preset size set to " + presetSize);
+						}
+						
+						else if(command.equals("BUILD_PRESET_NETWORK")) {
+							System.out.println("** Starting to build preset network of type " + preset);
+							// voltage source is places on nodes nPos,nNeg = 1,0
+							if(preset.equals("series")) {
+								numberOfNodes = presetSize;
+								network = new Network(presetSize);
+								System.out.println("Number of nodes is set to " + numberOfNodes);
+								System.out.println("Number of memristor that will be added: " + presetSize);
+								alpha_sigma = muSigmaRatio * alpha_mu; beta_sigma = muSigmaRatio * beta_mu; //should not be have to be used here, rewrite code for this
+								maxR = maxR_default; minR = minR_default; initR = initR_default;
+								ampls = new double[0];
+								nPos = 1; nNeg = 0;
+								vg = new VoltageSourceDictated(ampls, nPos, nNeg);
+								System.out.println("Source for data input set between node " + nPos + " and " + nNeg);
+								
+								for(int i=1;i<=presetSize;i++) {
+									if(i + 1 <= presetSize) {
+										alpha = r.nextGaussian()*alpha_sigma + alpha_mu;
+										beta = r.nextGaussian()*beta_sigma + beta_mu;
+										nPos = i; nNeg = i + 1;
+										Memristor memristor = new Memristor(initR, maxR, minR, alpha, beta, vthresh, nPos, nNeg);
+										memristor.beUsedForState();
+										network.addbranch(memristor);
+										System.out.print("Memristor added between node " + nPos + " and " + nNeg + " with initR = " + initR + 
+												", minR = " + minR + " and maxR = " + maxR + ". Also v_thresh = " + vthresh);
+										System.out.println(". Alpha is set to: " + alpha + ", and beta is set to: " + beta);
+										numberOfMemristors = numberOfMemristors + 1;
+									}
+									else {
+										alpha = r.nextGaussian()*alpha_sigma + alpha_mu;
+										beta = r.nextGaussian()*beta_sigma + beta_mu;
+										nPos = i; nNeg = 0;
+										Memristor memristor = new Memristor(initR, maxR, minR, alpha, beta, vthresh, nPos, nNeg);
+										memristor.beUsedForState();
+										network.addbranch(memristor);
+										System.out.print("Memristor added between node " + nPos + " and " + nNeg + " with initR = " + initR + 
+												", minR = " + minR + " and maxR = " + maxR + ". Also v_thresh = " + vthresh);
+										System.out.println(". Alpha is set to: " + alpha + ", and beta is set to: " + beta);
+										numberOfMemristors = numberOfMemristors + 1;
+									}
+								}
+							}
+						}
+						else if(command.equals("SET_AMP_VALUE")){
+							amplifierValue = Integer.parseInt(st.nextToken());
+							System.out.println("Voltage amp set to " + amplifierValue);
+						}
+						
+						
+						
+						
 						
 						
 						
@@ -186,7 +264,7 @@ public class IOParser{
 								
 						
 					} else {
-						System.out.println("Empty line detected");
+						//System.out.println("Empty line detected");
 					}
 					
 					

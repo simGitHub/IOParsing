@@ -13,13 +13,18 @@ public class SimulateNetwork {
 		
 		//System.out.println("Reading dataset: " + dataFileDir);
 		double[][] dataset = textToArrayReader.readInTheArray(dataFileDir);
+		
+		for(int i = 0; i < dataset.length;i++) {
+			dataset[i][1] = par.amplifierValue * dataset[i][1];
+		}
+		
 		vg.dictate(dataset, 1);
 		vg.defineDTtoSuggest(dt);
 		network.addsource(vg);
 		
-		//System.out.println(" ** Starting simulation ** ");
+		System.out.println(" ** Starting simulation ** ");
 		network.operateNetwork(0.0, SIMULATION_TIME);
-		//System.out.println(" ** Simulation finished ** ");
+		System.out.println(" ** Simulation finished ** ");
 		
 		// exctract all added monitors, memristors to one 2D text file and voltage to one 2D text file. One column corresponds to a value set.
 		ArrayList<Monitor> monitors = network.getMonitors();

@@ -11,6 +11,17 @@ BEGIN_NETWORK/END_NETWORK: Specify the start and end of the config file commands
 ARCH_PRESET: specify if the following network will be set manual (manual using ADD_MEM commands) or a preset, commands parameters is: y/n
 ARCH_PRESET_TYPE: if preset has been set to "y", then the type of architecture is needed to be selected, possible architecture selections are: ring/crossbar/etc.
 SET_PRESET_SIZE: sets size of the specified preset reservoir type, typically this is the number of memristor in the reservoir
+FREQUENCY_INPUT: used to have a frequency based input signal (can be used if one do not wish to use a dataset as voltage source)
+
+commands needed:
+If manual:
+	- #NODES
+	- ADD_DATASOURCE
+	- ADD_MEM
+if preset:
+	- SET_PRESET_TYPE
+	- SET_PRESET_SIZE
+	- BUILD_PRESET_NETWORK
 
 other: 
 	- If an empty line is used, this will be displayed when running the program
