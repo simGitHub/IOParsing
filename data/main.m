@@ -1,30 +1,69 @@
 clear;clc;clf;
-pause_time = 1;
+pause_time = 2;
 
 
 
 dir = "preset/series/";
-dataset = "square";
+dataset = "triangle";
 m = load(dir + dataset + "/memristance.txt"); m = m';
 figure(1); plot(m(:,1),m(:,2)); hold on;
-plot(m(:,1),m(:,4)); 
-plot(m(:,1),m(:,6));
-plot(m(:,3),m(:,8)); 
-plot(m(:,12),m(:,4)); 
+%plot(m(:,1),m(:,3)); 
+pause(pause_time)
+
+dataset = "square";
+m = load(dir + dataset + "/memristance.txt"); m = m';
+figure(1); plot(m(:,1),m(:,2));
+%plot(m(:,1),m(:,3)); 
+
 pause(pause_time)
 
 
+%% optimization of readout vector
+clear;clc;
+dir = "preset/series/";
+dataset = "square";
+X_s = load(dir + dataset + "/memristance.txt");
+dataset = "triangle";
+X_t = load(dir + dataset + "/memristance.txt");
+theta_s=zeros(1,length(X_s(:,1)));
+theta_t=zeros(1,length(X_t(:,1)));
 
+m = length(X_s(1,:));
+nbrInternalStates = length(X_s(:,1));
+
+y = ones(1,m);
+for j = 1:nbrInternalStates
+    for i = 1:m
+        delta_theta_s_j = 1/m * ( (theta_s*X_s(:,i)-y(i)) ) * X_s(j,i);
+        theta_s(j) = theta_s(j) - 0.1 * delta_theta_s_j;
+    end
+end
+
+y = -1 * ones(1,m);
+for j = 1:nbrInternalStates
+    for i = 1:m
+        delta_theta_t_j = 1/m * ( (theta_t*X_t(:,i)-y(i)) ) * X_t(j,i);
+        theta_t(j) = theta_t(j) - 0.1 * delta_theta_t_j;
+    end
+end
+    
+plot(theta_s*X_s,'b'); hold on
+plot(theta_s*X_t,'b'); 
+
+plot(theta_t*X_s,'g');
+plot(theta_t*X_t,'g'); hold off
+
+plot(theta_s*X_s); hold on
+plot(theta_t*X_s);
 
 %% read combined
 clear;clc;clf;
 pause_time = 0.5;
 
-dir = "combined/";
-dataset = "combined_8";
-m = load(dir + dataset + "/memristance.txt"); m = m';
-figure(1); plot(m(:,2),m(:,1)); hold on;
-pause(pause_time)
+dir = "preset/series/";
+dataset = "triangle";
+m = load(dir + dataset + "/triangle.txt"); m = m';
+figure(1); plot(m(2,:))
 
 
 

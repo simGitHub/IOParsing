@@ -1,47 +1,54 @@
 clear;clc;clf;
+pause_time = 2;
 
-dir = "square/";
 
-dataset = "square_2";
+
+dir = "preset/series/";
+dataset = "triangle";
 m = load(dir + dataset + "/memristance.txt"); m = m';
-figure(2); plot(m(:,2)); hold on
-figure(1); plot(m(:,2),m(:,1)); hold on;
-pause(0.5)
+figure(1); plot(m(:,1),m(:,2)); hold on;
+%plot(m(:,1),m(:,3)); 
+pause(pause_time)
 
-
-
-dataset = "square_4";
+dataset = "square";
 m = load(dir + dataset + "/memristance.txt"); m = m';
-figure(1); plot(m(:,2),m(:,1));
-pause(0.5)
+figure(1); plot(m(:,1),m(:,2));
+%plot(m(:,1),m(:,3)); 
 
-dir = "triangle/";
-dataset = "triangle_2";
-m = load(dir + dataset + "/memristance.txt"); m = m';
-figure(1); plot(m(:,2),m(:,1));
-pause(0.5)
-
-dataset = "triangle_4";
-m = load(dir + dataset + "/memristance.txt"); m = m';
-figure(1); plot(m(:,2),m(:,1));
+pause(pause_time)
 
 
-% dataset = "triangle_2_amped";
-% m = load(dir + dataset + "/memristance.txt"); m = m';
-% figure(1); plot(m(:,2),m(:,1));
-% pause(0.5)
-% 
-dir = "square/";
-dataset = "square_2_dim";
-m = load(dir + dataset + "/memristance.txt"); m = m';
-d = load(dir + dataset + "/" + dataset + ".txt"); figure(2); plot(m(:,2)); hold off
-figure(1); plot(m(:,2),m(:,1)); hold off;
-pause(0.5)
+%% optimization of readout vector
+clear;clc;
+dir = "preset/series/";
+dataset = "square";
+X_s = load(dir + dataset + "/memristance.txt");
+dataset = "triangle";
+X_t = load(dir + dataset + "/memristance.txt");
+theta_s=zeros(1,length(X_s(:,1)));
+theta_t=zeros(1,length(X_t(:,1)));
 
+m = length(X_s(1,:));
+nbrInternalStates = length(X_s(:,1));
+y = ones(1,m);
+for j = 1:nbrInternalStates
+    for i = 1:m
+        delta_theta_s_j = 1/m * ( (theta_s*X_t(:,i)-y(i)) ) * X_s(j,i);
+        theta_s(j) = theta_s(j) - 0.1 * delta_theta_s_j;
+    end
+end
+    
+plot(theta_s*X_s,'b'); hold on
+plot(theta_s*X_t,'g'); hold off
 
-% figure(2); plot(m(:,1)); hold on; plot(m(:,2)); hold off; figure(3); plot(m2(:,1)); hold on; plot(m2(:,2)); hold off;
-% figure(4); plot(data(:,2)) 
-% figure(5); plot(data2(:,2))
+%% read combined
+clear;clc;clf;
+pause_time = 0.5;
+
+dir = "preset/series/";
+dataset = "triangle";
+m = load(dir + dataset + "/triangle.txt"); m = m';
+figure(1); plot(m(2,:))
 
 
 
@@ -49,8 +56,9 @@ pause(0.5)
 clear;clc;clf;
 dt=0.01; T = 30;
 t = 0:dt:T;
-omega = 2;
-triangle = 2 * sawtooth(t*omega,0.5);
+omega = 16;
+amp = 1;
+triangle = amp * sawtooth(t*omega,0.5);
 
 % delay the signal
 delay = 0.8 * 100;
@@ -62,8 +70,8 @@ plot(t,triangle)
 M = zeros(length(t),2);
 M(:,2) = triangle;
 M(:,1) = t;
-dataName = "triangle_2_amped";
-dlmwrite("/users/simon/eclipse-workspace/simulator/src/data/triangle/modified/" + dataName + "/" + dataName + ".txt",M, ' ')
+dataName = "triangle_16";
+dlmwrite("/users/simon/eclipse-workspace/simulator/src/data/par/triangle/" + dataName + "/" + dataName + ".txt",M, ' ')
 disp('Done')
 %% read triangle voltage data
 d1 = load("/Users/simon/eclipse-workspace/simulator/src/data/triangle/modified/triangle_2/triangle_2.txt");
@@ -80,7 +88,8 @@ clear;clc;clf;
 dt=0.01; T = 30;
 t = 0:dt:T;
 omega = 2;
-square = 0.5*square(t*omega);
+amp = 1;
+square = amp * square(t*omega);
 
 % delay the signal
 delay = 0.8 * 100;
@@ -91,5 +100,41 @@ plot(t,square)
 M = zeros(length(t),2);
 M(:,2) = square;
 M(:,1) = t;
-dataName = "square_2_dim";
-dlmwrite("/users/simon/eclipse-workspace/simulator/src/data/square/" + dataName + "/" + dataName + ".txt",M, ' ')
+dataName = "square_2_amp09";
+dlmwrite("/users/simon/eclipse-workspace/simulator/src/data/par/square/" + dataName + "/" + dataName + ".txt",M, ' ')
+
+%% merged square and triangle wave generator
+clear;clc;clf;
+dt=0.01; 
+omega = 8; amp = 1;
+T_square = 9; T_triangle = 9.5;
+t_square = 0:dt:T_square - dt;
+t_triangle = 0:dt:T_triangle - dt;
+t=0:dt:2*T_square + T_triangle -dt;
+
+squareWave = square(t_square * omega);
+triangleWave = sawtooth(t_triangle * omega, 1/2);
+
+
+% plot(t_square,squareWave); hold on;
+% plot(t_triangle, triangleWave); hold off;
+nbrIndex_square = length(t_square);
+nbrIndex_triangle = length(t_triangle);
+signal = zeros(1,nbrIndex_square * 2 + nbrIndex_triangle);
+signal(1:nbrIndex_square) = squareWave;
+signal(nbrIndex_square + 1 : nbrIndex_triangle + nbrIndex_square) = triangleWave;
+signal(nbrIndex_square + nbrIndex_triangle + 1: 2*nbrIndex_square + nbrIndex_triangle) = squareWave;
+figure(2); plot(t,signal);
+
+M = zeros(length(t),2);
+M(:,2) = signal;
+M(:,1) = t;
+dataName = "combined_8";
+dlmwrite("/users/simon/eclipse-workspace/simulator/src/data/par/combined/" + dataName + "/" + dataName + ".txt",M, ' ')
+
+
+
+%% plot
+clc;
+d = load("combined/combined_4/combined_4.txt");
+plot(d(:,2));

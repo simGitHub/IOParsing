@@ -19,6 +19,9 @@ public class main {
 			
 			dataName = "square";
 			new SimulateNetwork(network, par, directory, dataName, dt, SIMULATION_TIME);
+			
+			dataName = "triangle";
+			new SimulateNetwork(network, par, directory, dataName, dt, SIMULATION_TIME);
 
 
 		}

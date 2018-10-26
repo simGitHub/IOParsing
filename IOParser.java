@@ -31,7 +31,7 @@ public class IOParser{
 		Random r = new Random();
 		int nPosSource; int nNegSource; int numberOfAmpIndices; double[] ampls;	int DC_multiplier = 4;			
 		int nPos; int nNeg;
-		double alpha_mu = 1.0; double beta_mu = 10.0; double muSigmaRatio = 0.4; double beta_sigma = beta_mu * muSigmaRatio; double alpha_sigma = alpha_mu * muSigmaRatio;
+		double alpha_mu = 1.0; double beta_mu = 10.0; double beta_sigma = 0; double alpha_sigma = 0;
 		double alpha; double beta; double vthresh = 0.4;
 		double initR; double minR; double maxR; 
 		double initR_default = 4; double minR_default = 2; double maxR_default = 8;
@@ -120,7 +120,6 @@ public class IOParser{
 							initR = Double.parseDouble(st.nextToken("|,"));
 							minR = Double.parseDouble(st.nextToken());
 							maxR = Double.parseDouble(st.nextToken());
-							alpha_sigma = muSigmaRatio * alpha_mu; beta_sigma = muSigmaRatio * beta_mu;
 							alpha = r.nextGaussian()*alpha_sigma + alpha_mu;
 							beta = r.nextGaussian()*beta_sigma + beta_mu;
 							Memristor memristor = new Memristor(initR, maxR, minR, alpha, beta, vthresh, nPos, nNeg);
@@ -180,13 +179,19 @@ public class IOParser{
 							System.out.println("beta_mu set to " + beta_mu);
 						}
 						
-						else if(command.equals("SET_MU_SIGMA_RATIO")) {
-							muSigmaRatio = Double.parseDouble(st.nextToken());
+						else if(command.equals("SET_ALPHA_SIGMA")) {
+							alpha_sigma = Double.parseDouble(st.nextToken());
+							System.out.println("Alpha_sigma set to " + alpha_sigma);
+						}
+						
+						else if(command.equals("SET_BETA_SIGMA")) {
+							beta_sigma = Double.parseDouble(st.nextToken());
+							System.out.println("Beta_sigma set to " + beta_sigma);
 						}
 						
 						else if(command.equals("ARCH_TYPE")) {
 							if(st.nextToken().equals("preset")){
-								System.out.println("preset option selected, network should be built using preset architecture");
+								System.out.println("preset option selected, network should be built using preset architecture commands");
 							}
 							else if(st.nextToken().equals("manual")) {
 								System.out.println("manual option selected, network should be built using manual commands, therefore number of nodes command must be used");
@@ -205,14 +210,14 @@ public class IOParser{
 						}
 						
 						else if(command.equals("BUILD_PRESET_NETWORK")) {
-							System.out.println("** Starting to build preset network of type " + preset);
+							System.out.println(" ** Starting to build preset network of type: " + preset + " **");
 							// voltage source is places on nodes nPos,nNeg = 1,0
+							
 							if(preset.equals("series")) {
 								numberOfNodes = presetSize;
 								network = new Network(presetSize);
-								System.out.println("Number of nodes is set to " + numberOfNodes);
+								System.out.println("Number of nodes are set to " + numberOfNodes);
 								System.out.println("Number of memristor that will be added: " + presetSize);
-								alpha_sigma = muSigmaRatio * alpha_mu; beta_sigma = muSigmaRatio * beta_mu; //should not be have to be used here, rewrite code for this
 								maxR = maxR_default; minR = minR_default; initR = initR_default;
 								ampls = new double[0];
 								nPos = 1; nNeg = 0;
