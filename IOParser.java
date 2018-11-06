@@ -251,6 +251,9 @@ public class IOParser{
 									}
 								}
 							}
+							else if(preset.equals("multi_series")) {
+								
+							}
 						}
 						else if(command.equals("SET_AMP_VALUE")){
 							amplifierValue = Integer.parseInt(st.nextToken());
