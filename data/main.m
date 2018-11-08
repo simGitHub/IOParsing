@@ -7,15 +7,9 @@ dir = "preset/series/";
 dataset = "triangle";
 m = load(dir + dataset + "/memristance.txt"); m = m';
 figure(1); plot(m(:,1),m(:,2)); hold on;
-%plot(m(:,1),m(:,3)); 
-pause(pause_time)
-
-dataset = "square";
-m = load(dir + dataset + "/memristance.txt"); m = m';
-figure(1); plot(m(:,1),m(:,2));
-%plot(m(:,1),m(:,3)); 
 
 pause(pause_time)
+
 
 
 %% optimization of readout vector

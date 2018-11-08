@@ -12,7 +12,7 @@ public class main {
 		IOParser par = new IOParser();
 		if(args.length != 0) {
 			String directory = "/users/simon/eclipse-workspace/simulator/src/data/preset/series/";
-			String dataName; double dt = 0.01; //String dataDir;
+			String dataName; double dt = 0.01; 
 			Network network = null; String configFile = args[0];
 			network = par.DefineNetwork(configFile, network);
 			
