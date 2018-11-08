@@ -25,7 +25,7 @@ public class IOParser{
 	public Network DefineNetwork(String configFile, Network network) {
 		
 		// declaration of variables
-		String preset = null; int presetSize = 0;
+		String preset = null; int presetDepthSize = 0; int presetLengthSize = 0; int presetSize = 0;
 		int numberOfNodes = 0;
 		BufferedReader br = null;
 		Random r = new Random();
@@ -158,8 +158,8 @@ public class IOParser{
 							}
 							System.out.println("Number of voltage monitors: " + numberOfVoltageMonitors);
 
-						// for clarity surpose, memristor commands should be encapsulated by a BEGIN_MEM and END_MEM commands. 
-						}
+						 
+						} // for clarity surpose, memristor adding commands may be encapsulated by a BEGIN_MEM and END_MEM commands in config file.
 						else if(command.equals("BEGIN_MEM")) {
 							System.out.println(" ** Starting to add memristors. ** ");
 						}
@@ -205,56 +205,58 @@ public class IOParser{
 						}
 						
 						else if(command.equals("SET_PRESET_SIZE")) {
-							presetSize = Integer.parseInt(st.nextToken());
-							System.out.println("Preset size set to " + presetSize);
+							presetDepthSize = Integer.parseInt(st.nextToken(" x"));
+							presetLengthSize = Integer.parseInt(st.nextToken());
+							System.out.println("Preset size depth taken to be " + presetDepthSize + " and length taken to be " + presetLengthSize);
 						}
 						
 						else if(command.equals("BUILD_PRESET_NETWORK")) {
 							System.out.println(" ** Starting to build preset network of type: " + preset + " **");
-							// voltage source is places on nodes nPos,nNeg = 1,0
 							
-							if(preset.equals("series")) {
-								numberOfNodes = presetSize;
-								network = new Network(presetSize);
+							if(preset.equals("multi_series")) {
+								numberOfNodes = presetLengthSize * presetDepthSize;
+								network = new Network(numberOfNodes);
 								System.out.println("Number of nodes are set to " + numberOfNodes);
-								System.out.println("Number of memristor that will be added: " + presetSize);
+								System.out.println("Number of memristor that will be added: " + numberOfNodes);
 								maxR = maxR_default; minR = minR_default; initR = initR_default;
 								ampls = new double[0];
-								nPos = 1; nNeg = 0;
-								vg = new VoltageSourceDictated(ampls, nPos, nNeg);
-								System.out.println("Source for data input set between node " + nPos + " and " + nNeg);
-								
-								for(int i=1;i<=presetSize;i++) {
-									if(i + 1 <= presetSize) {
-										alpha = r.nextGaussian()*alpha_sigma + alpha_mu;
-										beta = r.nextGaussian()*beta_sigma + beta_mu;
-										nPos = i; nNeg = i + 1;
-										Memristor memristor = new Memristor(initR, maxR, minR, alpha, beta, vthresh, nPos, nNeg);
-										memristor.beUsedForState();
-										network.addbranch(memristor);
-										System.out.print("Memristor added between node " + nPos + " and " + nNeg + " with initR = " + initR + 
-												", minR = " + minR + " and maxR = " + maxR + ". Also v_thresh = " + vthresh);
-										System.out.println(". Alpha is set to: " + alpha + ", and beta is set to: " + beta);
-										numberOfMemristors = numberOfMemristors + 1;
-									}
-									else {
-										alpha = r.nextGaussian()*alpha_sigma + alpha_mu;
-										beta = r.nextGaussian()*beta_sigma + beta_mu;
-										nPos = i; nNeg = 0;
-										Memristor memristor = new Memristor(initR, maxR, minR, alpha, beta, vthresh, nPos, nNeg);
-										memristor.beUsedForState();
-										network.addbranch(memristor);
-										System.out.print("Memristor added between node " + nPos + " and " + nNeg + " with initR = " + initR + 
-												", minR = " + minR + " and maxR = " + maxR + ". Also v_thresh = " + vthresh);
-										System.out.println(". Alpha is set to: " + alpha + ", and beta is set to: " + beta);
-										numberOfMemristors = numberOfMemristors + 1;
+								for(int j=0;j<presetDepthSize;j++) {
+									nPos = 1 + j * presetLengthSize; nNeg = 0;
+									vg = new VoltageSourceDictated(ampls, nPos, nNeg);
+									System.out.println("Source for data input set between node " + nPos + " and " + nNeg);
+									for(int i=1;i<=presetLengthSize;i++) {
+										if(i + 1 <= presetLengthSize) {
+											alpha = r.nextGaussian()*alpha_sigma + alpha_mu;
+											beta = r.nextGaussian()*beta_sigma + beta_mu;
+											nPos = i + j * presetLengthSize; nNeg = i + 1 + j * presetLengthSize;
+											Memristor memristor = new Memristor(initR, maxR, minR, alpha, beta, vthresh, nPos, nNeg);
+											memristor.beUsedForState();
+											network.addbranch(memristor);
+											System.out.print("Memristor added between node " + nPos + " and " + nNeg + " with initR = " + initR + 
+													", minR = " + minR + " and maxR = " + maxR + ". Also v_thresh = " + vthresh);
+											System.out.println(". Alpha is set to: " + alpha + ", and beta is set to: " + beta);
+											numberOfMemristors = numberOfMemristors + 1;
+										}
+										else {
+											alpha = r.nextGaussian()*alpha_sigma + alpha_mu;
+											beta = r.nextGaussian()*beta_sigma + beta_mu;
+											nPos = i + j * presetLengthSize; nNeg = 0;
+											Memristor memristor = new Memristor(initR, maxR, minR, alpha, beta, vthresh, nPos, nNeg);
+											memristor.beUsedForState();
+											network.addbranch(memristor);
+											System.out.print("Memristor added between node " + nPos + " and " + nNeg + " with initR = " + initR + 
+													", minR = " + minR + " and maxR = " + maxR + ". Also v_thresh = " + vthresh);
+											System.out.println(". Alpha is set to: " + alpha + ", and beta is set to: " + beta);
+											numberOfMemristors = numberOfMemristors + 1;
+										}
 									}
 								}
 							}
-							else if(preset.equals("multi_series")) {
-								
+							else {
+								System.out.println("Preset type: " + preset + " not found" );
 							}
 						}
+						
 						else if(command.equals("SET_AMP_VALUE")){
 							amplifierValue = Integer.parseInt(st.nextToken());
 							System.out.println("Voltage amp set to " + amplifierValue);

@@ -2,26 +2,25 @@ import java.util.ArrayList;
 
 import circuitNetwork.*;
 import readData.ReadFromTextFile2DArray;
+// Reads data from file and runs networks with this data. Later ExportMatrix is called to export the monitors to txt files.
 
 public class SimulateNetwork {
 	public SimulateNetwork(Network network, IOParser par, String dataDir, String dataName, double dt, int SIMULATION_TIME) {
-		network.resetSources(); // needed network sources
+		network.resetSources(); // need to reset for different datasets from main
 		ReadFromTextFile2DArray textToArrayReader = new ReadFromTextFile2DArray();
 		VoltageSourceDictated vg = par.vg;
 		String dataFileDir = dataDir + dataName + "/" + dataName + ".txt";
 		String saveFileDir = dataDir + dataName + "/";
 		
-		//System.out.println("Reading dataset: " + dataFileDir);
+		// Read data from file and add it to voltageSource (vg)
 		double[][] dataset = textToArrayReader.readInTheArray(dataFileDir);
 		
 		for(int i = 0; i < dataset.length;i++) {
 			dataset[i][1] = par.amplifierValue * dataset[i][1];
 		}
-		
 		vg.dictate(dataset, 1);
 		vg.defineDTtoSuggest(dt);
 		network.addsource(vg);
-		
 		System.out.println(" ** Starting simulation ** ");
 		network.operateNetwork(0.0, SIMULATION_TIME);
 		System.out.println(" ** Simulation finished ** ");
