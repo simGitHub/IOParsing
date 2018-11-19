@@ -21,8 +21,8 @@ public class IOParser{
 	int amplifierValue = 0;
 	int numberOfMemristors = 0;
 	int numberOfVoltageMonitors = 0;
-	VoltageSourceDictated vg;
-	public Network DefineNetwork(String configFile, Network network) {
+	List<VoltageSourceDictated> vgList = new ArrayList<VoltageSourceDictated>(); // need array if multiple sources are added
+	public Network BuldNetworkFromConfigFile(String configFile, Network network) {
 		
 		// declaration of variables
 		String preset = null; int presetDepthSize = 0; int presetLengthSize = 0; int presetSize = 0;
@@ -107,7 +107,7 @@ public class IOParser{
 							nPosSource = Integer.parseInt(st.nextToken(" ,"));
 							nNegSource = Integer.parseInt(st.nextToken(",|"));
 							ampls = new double[0];
-							vg = new VoltageSourceDictated(ampls, nPosSource, nNegSource);
+							vgList.add(new VoltageSourceDictated(ampls, nPosSource, nNegSource));
 							System.out.println("Source for data input set between node " + nPosSource + " and " + nNegSource);
 						}
 
@@ -222,7 +222,7 @@ public class IOParser{
 								ampls = new double[0];
 								for(int j=0;j<presetDepthSize;j++) {
 									nPos = 1 + j * presetLengthSize; nNeg = 0;
-									vg = new VoltageSourceDictated(ampls, nPos, nNeg);
+									vgList.add(new VoltageSourceDictated(ampls, nPos, nNeg));
 									System.out.println("Source for data input set between node " + nPos + " and " + nNeg);
 									for(int i=1;i<=presetLengthSize;i++) {
 										if(i + 1 <= presetLengthSize) {

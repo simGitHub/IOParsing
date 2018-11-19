@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 import circuitNetwork.*;
 import readData.ReadFromTextFile2DArray;
@@ -8,19 +9,27 @@ public class SimulateNetwork {
 	public SimulateNetwork(Network network, IOParser par, String dataDir, String dataName, double dt, int SIMULATION_TIME) {
 		network.resetSources(); // need to reset for different datasets from main
 		ReadFromTextFile2DArray textToArrayReader = new ReadFromTextFile2DArray();
-		VoltageSourceDictated vg = par.vg;
-		String dataFileDir = dataDir + dataName + "/" + dataName + ".txt";
-		String saveFileDir = dataDir + dataName + "/";
+		List<VoltageSourceDictated> vgList = par.vgList;
+		String dataFile = dataDir + "/" + dataName + ".txt";
 		
 		// Read data from file and add it to voltageSource (vg)
-		double[][] dataset = textToArrayReader.readInTheArray(dataFileDir);
+		double[][] dataset = textToArrayReader.readInTheArray(dataFile);
 		
+		// amplify the data signal
 		for(int i = 0; i < dataset.length;i++) {
 			dataset[i][1] = par.amplifierValue * dataset[i][1];
 		}
-		vg.dictate(dataset, 1);
-		vg.defineDTtoSuggest(dt);
-		network.addsource(vg);
+		
+		// add source(s) and data to it (them). Maybe add expetion handling, e.g. try and catch, for one may miss to add data to each source.
+		vgList.get(0).dictate(dataset, 1); 
+		vgList.get(0).defineDTtoSuggest(dt);
+		network.addsource(vgList.get(0));
+		
+		vgList.get(1).dictate(dataset, 1); 
+		vgList.get(1).defineDTtoSuggest(dt);
+		network.addsource(vgList.get(1));
+		
+		// run simulation
 		System.out.println(" ** Starting simulation ** ");
 		network.operateNetwork(0.0, SIMULATION_TIME);
 		System.out.println(" ** Simulation finished ** ");
@@ -39,8 +48,8 @@ public class SimulateNetwork {
 			ArrayList<Double> memristanceValues = monitors.get(i).getValues();
 			memristanceMatrix.add(memristanceValues);
 		}
-		String mStr = saveFileDir + "memristance.txt";
-		String vStr = saveFileDir + "voltage.txt";
+		String mStr = dataDir + "/memristance_" + dataName + ".txt";
+		String vStr = dataDir + "/voltage_" + dataName + ".txt";
 		new ExportMatrix(mStr, memristanceMatrix);
 		new ExportMatrix(vStr, voltageMatrix);
 		System.out.println();
