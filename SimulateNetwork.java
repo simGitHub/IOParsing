@@ -3,7 +3,7 @@ import java.util.List;
 
 import circuitNetwork.*;
 import readData.ReadFromTextFile2DArray;
-// Reads data from file and runs networks with this data. Later ExportMatrix is called to export the monitors to txt files.
+// Reads data from directory, simulate the network with it, then export memristance (voltage) monitors to text file in same directory.
 
 public class SimulateNetwork {
 	public SimulateNetwork(Network network, IOParser par, String dataDir, String dataName, double dt, int SIMULATION_TIME) {
@@ -12,7 +12,7 @@ public class SimulateNetwork {
 		List<VoltageSourceDictated> vgList = par.vgList;
 		String dataFile = dataDir + "/" + dataName + ".txt";
 		
-		// Read data from file and add it to voltageSource (vg)
+		// Read data from file
 		double[][] dataset = textToArrayReader.readInTheArray(dataFile);
 		
 		// amplify the data signal
@@ -20,7 +20,7 @@ public class SimulateNetwork {
 			dataset[i][1] = par.amplifierValue * dataset[i][1];
 		}
 		
-		// add source(s) and data to it (them). Maybe add expetion handling, e.g. try and catch, for one may miss to add data to each source.
+		// add source(s) and data to it (them). Maybe add exception handling, e.g. try and catch, for one may miss to add data to each source.
 		vgList.get(0).dictate(dataset, 1); 
 		vgList.get(0).defineDTtoSuggest(dt);
 		network.addsource(vgList.get(0));
