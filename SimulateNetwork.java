@@ -4,6 +4,7 @@ import java.util.List;
 import circuitNetwork.*;
 import readData.ReadFromTextFile2DArray;
 // Reads data from directory, simulate the network with it, then export memristance (voltage) monitors to text file in same directory.
+// make so it does not export voltage if only zero voltage monitors is declared
 
 public class SimulateNetwork {
 	public SimulateNetwork(Network network, IOParser par, String dataDir, String dataName, double dt, int SIMULATION_TIME) {

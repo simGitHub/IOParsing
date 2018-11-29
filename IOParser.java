@@ -13,8 +13,6 @@
 import java.io.*;
 import java.util.*;
 import circuitNetwork.*;
-import readData.ReadFromTextFile2DArray;
-
 
 public class IOParser{
 	// these variable needs to be seen by the main
@@ -25,16 +23,16 @@ public class IOParser{
 	public Network BuldNetworkFromConfigFile(String configFile, Network network) {
 		
 		// declaration of variables
-		String preset = null; int presetDepthSize = 0; int presetLengthSize = 0; int presetSize = 0;
+		String preset = null; int presetDepthSize = 0; int presetLengthSize = 0;
 		int numberOfNodes = 0;
 		BufferedReader br = null;
 		Random r = new Random();
 		int nPosSource; int nNegSource; int numberOfAmpIndices; double[] ampls;	int DC_multiplier = 4;			
 		int nPos; int nNeg;
 		double alpha_mu = 1.0; double beta_mu = 10.0; double beta_sigma = 0; double alpha_sigma = 0;
-		double alpha; double beta; double vthresh = 0.4;
+		double alpha; double beta;
 		double initR; double minR; double maxR; 
-		double initR_default = 4; double minR_default = 2; double maxR_default = 8;
+		double initR_default = 4; double minR_default = 2; double maxR_default = 8; double vthresh = 0.4;
 		String monitorArgument; String addMonitorArgument;
 		
 		

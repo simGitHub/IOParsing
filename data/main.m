@@ -143,7 +143,10 @@ dlmwrite("/users/simon/eclipse-workspace/simulator/src/data/par/combined/" + dat
 
 
 
-%% plot
-clc;
-d = load("combined/combined_4/combined_4.txt");
-plot(d(:,2));
+%% test of linear regression of for two classes
+%  the two classes are drawned from a gaussian distribution
+%  r=normrnd(mu,sigma)
+clc; clear;clf;
+
+r = normrnd(0,1)
+
