@@ -12,6 +12,7 @@ public class SimulateNetwork {
 		ReadFromTextFile2DArray textToArrayReader = new ReadFromTextFile2DArray();
 		List<VoltageSourceDictated> vgList = par.vgList;
 		String dataFile = dataDir + "/" + dataName + ".txt";
+		String addWordmStr;
 		
 		// Read data from file
 		double[][] dataset = textToArrayReader.readInTheArray(dataFile);
@@ -22,13 +23,12 @@ public class SimulateNetwork {
 		}
 		
 		// add source(s) and data to it (them). Maybe add exception handling, e.g. try and catch, for one may miss to add data to each source.
-		vgList.get(0).dictate(dataset, 1); 
-		vgList.get(0).defineDTtoSuggest(dt);
-		network.addsource(vgList.get(0));
-		
-		vgList.get(1).dictate(dataset, 1); 
-		vgList.get(1).defineDTtoSuggest(dt);
-		network.addsource(vgList.get(1));
+		for(int i=0;i<vgList.size();i++) {
+			VoltageSourceDictated vgTemp = vgList.get(i);
+			vgTemp.dictate(dataset, 1); 
+			vgTemp.defineDTtoSuggest(dt);
+			network.addsource(vgTemp);
+		}
 		
 		// run simulation
 		System.out.println(" ** Starting simulation ** ");
@@ -49,11 +49,18 @@ public class SimulateNetwork {
 			ArrayList<Double> memristanceValues = monitors.get(i).getValues();
 			memristanceMatrix.add(memristanceValues);
 		}
-		String mStr = dataDir + "/memristance_" + dataName + ".txt";
-		String vStr = dataDir + "/voltage_" + dataName + ".txt";
-		new ExportMatrix(mStr, memristanceMatrix);
-		new ExportMatrix(vStr, voltageMatrix);
-		System.out.println();
+		if(par.numberOfVoltageMonitors == 0) {
+			String mStr = dataDir + "/memristance_" + dataName + ".txt";
+			new ExportMatrix(mStr, memristanceMatrix);
+			System.out.println();
+		}
+		else {
+			String mStr = dataDir + "/memristance_" + dataName + ".txt";
+			String vStr = dataDir + "/voltage_" + dataName + ".txt";
+			new ExportMatrix(mStr, memristanceMatrix);
+			new ExportMatrix(vStr, voltageMatrix);
+			System.out.println();
+		}
 		
 	}
 }

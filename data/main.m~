@@ -4,16 +4,17 @@ pause_time = 2;
 
 
 dir = "preset/series/";
-m = load(dir + "/memristance_triangle_amp.txt"); m = m';
+dataset = "triangle";
+m = load(dir + dataset + "/memristance.txt"); m = m';
 figure(1); plot(m(:,1),m(:,2)); hold on;
 
 pause(pause_time)
 
 
 
-%% calculation of readout vector
-clc;clf;
-dir ="preset/series/";
+%% optimization of readout vector
+clear;clc;clf;
+dir = "preset/series/";
 X_s = load(dir + "/memristance_square.txt");
 X_t = load(dir + "/memristance_triangle.txt");
 theta_s=zeros(1,length(X_s(:,1)));
@@ -29,6 +30,7 @@ for j = 1:nbrInternalStates
         theta_s(j) = theta_s(j) - 0.1 * delta_theta_s_j;
     end
 end
+
 y = -1 * ones(1,m);
 for j = 1:nbrInternalStates
     for i = 1:m
@@ -43,69 +45,27 @@ plot(theta_t*X_t,'g');
 title('square on thetaSquare and same for triangle')
 legend('square output on square signal' , 'triangle output on triangle signal')
 xlabel('t')
-hold off
 
 unknown_label = X_s;
 figure(2)
 plot(theta_t*unknown_label,'b'); hold on
 plot(theta_s*unknown_label,'g');
 title('Unknown input on each output vectors')
-hold off
 
-classification = zeros(m,1);
 for i = 1:m
-    output_t = theta_t*unknown_label;
-    output_s = theta_s*unknown_label;
-    if(abs(output_s(i) - 1) < abs(output_t(i) + 1))
-        classification(i) = 1;
-    else
-        classification(i) = -1;
-    end
-end
-figure(3)
-plot(classification)
-title('classification of output, 1 is square, -1 is triangle')
-
-        
-%% classification with learnt output vector
-clc;clf;clear;
-theta_s = [0.197716682342451,0.0347564827602104,0.00611428041567514,0.00100506538404866,0.000143868955011865,7.89704705169010e-05,-4.85361178273661e-06,1.79267768542634e-05];
-theta_t = [-0.199367635073782,-0.0402634865879282,-0.00809402913358132,-0.00163919929123000,-0.000320362192202665,-9.09260860525190e-05,-9.64678418545205e-06,-1.07283916297108e-05];
-dir = "preset/series/";
-X_s = load(dir + "/memristance_square.txt");
-X_t = load(dir + "/memristance_triangle.txt");
-
-m = length(X_s(1,:));
-nbrInternalStates = length(X_s(:,1));
+    output_t = 
+    if(theta_t*unknown_label < theta_s*unknown_label)
     
-figure(1)
-plot(theta_s*X_s,'b'); hold on
-plot(theta_t*X_t,'g'); 
-title('square on thetaSquare and same for triangle')
-legend('square output on square signal' , 'triangle output on triangle signal')
-xlabel('t')
-hold off
 
-unknown_label = X_s;
-figure(2)
-plot(theta_t*unknown_label,'b'); hold on
-plot(theta_s*unknown_label,'g');
-title('Unknown input on each output vectors')
-hold off
 
-classification = zeros(m,1);
-for i = 1:m
-    output_t = theta_t*unknown_label;
-    output_s = theta_s*unknown_label;
-    if(abs(output_s(i) - 1) < abs(output_t(i) + 1))
-        classification(i) = 1;
-    else
-        classification(i) = -1;
-    end
-end
-figure(3)
-plot(classification)
-title('classification of output, 1 is square, -1 is triangle prediction')
+%% read combined
+clear;clc;clf;
+pause_time = 0.5;
+
+dir = "preset/series/";
+dataset = "triangle";
+m = load(dir + dataset + "/triangle.txt"); m = m';
+figure(1); plot(m(2,:))
 
 
 
@@ -189,4 +149,12 @@ M(:,1) = t;
 dataName = "combined_8";
 dlmwrite("/users/simon/eclipse-workspace/simulator/src/data/par/combined/" + dataName + "/" + dataName + ".txt",M, ' ')
 
+
+
+%% test of linear regression of for two classes
+%  the two classes are drawned from a gaussian distribution
+%  r=normrnd(mu,sigma)
+clc; clear;clf;
+
+r = normrnd(0,1)
 

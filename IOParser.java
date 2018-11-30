@@ -143,7 +143,7 @@ public class IOParser{
 							}
 							else if(monitorArgument.equals("voltage") & (!addMonitorArgument.equals("all"))) {
 								int i = Integer.parseInt(addMonitorArgument);
-								if(i <= numberOfNodes & i >= 0) {
+								if(i <= numberOfNodes & i > 0) {
 									network.addmonitor(i);
 									numberOfVoltageMonitors = numberOfVoltageMonitors + 1;
 									System.out.println("Voltage monitor added at node " + i);
@@ -250,6 +250,47 @@ public class IOParser{
 									}
 								}
 							}
+							// if has not: add vertical memristor connection between nodes
+							if(preset.equals("grid")) {
+								numberOfNodes = presetLengthSize * presetDepthSize;
+								network = new Network(numberOfNodes);
+								System.out.println("Number of nodes are set to " + numberOfNodes);
+								System.out.println("Number of memristor that will be added: " + numberOfNodes);
+								maxR = maxR_default; minR = minR_default; initR = initR_default;
+								ampls = new double[0];
+								for(int j=0;j<presetDepthSize;j++) {
+									nPos = 1 + j * presetLengthSize; nNeg = 0;
+									vgList.add(new VoltageSourceDictated(ampls, nPos, nNeg));
+									System.out.println("Source for data input set between node " + nPos + " and " + nNeg);
+									for(int i=1;i<=presetLengthSize;i++) {
+										if(i + 1 <= presetLengthSize) {
+											alpha = r.nextGaussian()*alpha_sigma + alpha_mu;
+											beta = r.nextGaussian()*beta_sigma + beta_mu;
+											nPos = i + j * presetLengthSize; nNeg = i + 1 + j * presetLengthSize;
+											Memristor memristor = new Memristor(initR, maxR, minR, alpha, beta, vthresh, nPos, nNeg);
+											memristor.beUsedForState();
+											network.addbranch(memristor);
+											System.out.print("Memristor added between node " + nPos + " and " + nNeg + " with initR = " + initR + 
+													", minR = " + minR + " and maxR = " + maxR + ". Also v_thresh = " + vthresh);
+											System.out.println(". Alpha is set to: " + alpha + ", and beta is set to: " + beta);
+											numberOfMemristors = numberOfMemristors + 1;
+										}
+										else {
+											alpha = r.nextGaussian()*alpha_sigma + alpha_mu;
+											beta = r.nextGaussian()*beta_sigma + beta_mu;
+											nPos = i + j * presetLengthSize; nNeg = 0;
+											Memristor memristor = new Memristor(initR, maxR, minR, alpha, beta, vthresh, nPos, nNeg);
+											memristor.beUsedForState();
+											network.addbranch(memristor);
+											System.out.print("Memristor added between node " + nPos + " and " + nNeg + " with initR = " + initR + 
+													", minR = " + minR + " and maxR = " + maxR + ". Also v_thresh = " + vthresh);
+											System.out.println(". Alpha is set to: " + alpha + ", and beta is set to: " + beta);
+											numberOfMemristors = numberOfMemristors + 1;
+										}
+									}
+								}
+							}
+							
 							else {
 								System.out.println("Preset type: " + preset + " not found" );
 							}
