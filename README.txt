@@ -48,13 +48,15 @@ input to the program:
 	 
 Types of presets:
 	- multi_series
-	- crossbar*
+	- grid*
 *: does not exist yet
 
 explanation of presets:
 	- multiseries: basically just multiple series each with their own voltage source connected to them. The series connections are not connected to each other.
-	- crossbar: similar to mutli_series, but here the series is connected to each other vertically, and the structure is a bit similar to a crossbar structure
-		(find better word similarity instead of crossbar?)
+	- grid: similar to mutli_series, but here the series is connected to each other vertically, and the structure is a bit similar 			to a grid structure hence the word
+
+Future ideas: 
+	- Presentate multi_series and grid structure on figures for clarity purpose.
 	
 
 
