@@ -1,0 +1,3 @@
+collection of thoughts:
+ - also draw Rmin,Rmax,Rinit,v_thresh from normal    distribution?
+ - compare the results with only using linear regression of voltage
