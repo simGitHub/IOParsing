@@ -35,7 +35,6 @@ public class IOParser{
 		double initR_default = 4; double minR_default = 2; double maxR_default = 8; double vthresh = 0.4;
 		String monitorArgument; String addMonitorArgument;
 		
-		
 		try {
 			br = new BufferedReader(new FileReader(configFile));
 			boolean END_NETWORK = false;
@@ -56,8 +55,6 @@ public class IOParser{
 						END_NETWORK = true;
 					}
 					
-					
-
 					if(!line.isEmpty()) { 
 						StringTokenizer st = new StringTokenizer(line);
 						String command = st.nextToken();
@@ -108,9 +105,7 @@ public class IOParser{
 							vgList.add(new VoltageSourceDictated(ampls, nPosSource, nNegSource));
 							System.out.println("Source for data input set between node " + nPosSource + " and " + nNegSource);
 						}
-
-
-								
+						
 						// adds memristors to the network
 						else if(command.equals("ADD_MEM")) {
 							nPos = Integer.parseInt(st.nextToken(" ,"));
@@ -251,11 +246,12 @@ public class IOParser{
 								}
 							}
 							// if has not: add vertical memristor connection between nodes
-							if(preset.equals("grid")) {
+							else if(preset.equals("grid")) {
 								numberOfNodes = presetLengthSize * presetDepthSize;
 								network = new Network(numberOfNodes);
 								System.out.println("Number of nodes are set to " + numberOfNodes);
-								System.out.println("Number of memristor that will be added: " + numberOfNodes);
+								int nbrOfMemtoBeAdded = presetLengthSize * presetDepthSize + presetLengthSize * (presetDepthSize - 1);
+								System.out.println("Number of memristor that will be added: " + nbrOfMemtoBeAdded);
 								maxR = maxR_default; minR = minR_default; initR = initR_default;
 								ampls = new double[0];
 								for(int j=0;j<presetDepthSize;j++) {
@@ -266,6 +262,16 @@ public class IOParser{
 										if(i + 1 <= presetLengthSize) {
 											alpha = r.nextGaussian()*alpha_sigma + alpha_mu;
 											beta = r.nextGaussian()*beta_sigma + beta_mu;
+											if((j + 1) != presetDepthSize) {
+												nPos = i + j * presetLengthSize; nNeg = i + (1 + j) * presetLengthSize;
+												Memristor memristor = new Memristor(initR, maxR, minR, alpha, beta, vthresh, nPos, nNeg);
+												memristor.beUsedForState();
+												network.addbranch(memristor);
+												System.out.print("Memristor added between node " + nPos + " and " + nNeg + " with initR = " + initR + 
+														", minR = " + minR + " and maxR = " + maxR + ". Also v_thresh = " + vthresh);
+												System.out.println(". Alpha is set to: " + alpha + ", and beta is set to: " + beta);
+												numberOfMemristors = numberOfMemristors + 1;
+											}
 											nPos = i + j * presetLengthSize; nNeg = i + 1 + j * presetLengthSize;
 											Memristor memristor = new Memristor(initR, maxR, minR, alpha, beta, vthresh, nPos, nNeg);
 											memristor.beUsedForState();
@@ -278,6 +284,16 @@ public class IOParser{
 										else {
 											alpha = r.nextGaussian()*alpha_sigma + alpha_mu;
 											beta = r.nextGaussian()*beta_sigma + beta_mu;
+											if((j + 1) != presetDepthSize) {
+												nPos = i + j * presetLengthSize; nNeg = i + (1 + j) * presetLengthSize;
+												Memristor memristor = new Memristor(initR, maxR, minR, alpha, beta, vthresh, nPos, nNeg);
+												memristor.beUsedForState();
+												network.addbranch(memristor);
+												System.out.print("Memristor added between node " + nPos + " and " + nNeg + " with initR = " + initR + 
+														", minR = " + minR + " and maxR = " + maxR + ". Also v_thresh = " + vthresh);
+												System.out.println(". Alpha is set to: " + alpha + ", and beta is set to: " + beta);
+												numberOfMemristors = numberOfMemristors + 1;
+											}
 											nPos = i + j * presetLengthSize; nNeg = 0;
 											Memristor memristor = new Memristor(initR, maxR, minR, alpha, beta, vthresh, nPos, nNeg);
 											memristor.beUsedForState();
@@ -289,38 +305,23 @@ public class IOParser{
 										}
 									}
 								}
-							}
-							
+							}	
 							else {
 								System.out.println("Preset type: " + preset + " not found" );
 							}
 						}
-						
 						else if(command.equals("SET_AMP_VALUE")){
 							amplifierValue = Integer.parseInt(st.nextToken());
 							System.out.println("Voltage amp set to " + amplifierValue);
 						}
-						
-						
-						
-						
-						
-						
-						
 						else if(!command.equals("END_NETWORK")){
 							System.out.println("Unknown command: " + command);
-						}
-								
-						
+						}		
 					} else {
 						//System.out.println("Empty line detected");
 					}
-					
-					
-
 				}
 			}
-			
 			else {
 				System.out.println("Incorrect first line, should be BEGIN_NETWORK");
 			}

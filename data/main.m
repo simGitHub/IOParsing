@@ -4,8 +4,9 @@ pause_time = 2;
 
 
 dir = "preset/series/";
-m = load(dir + "/memristance_triangle_amp.txt"); m = m';
-figure(1); plot(m(:,1),m(:,2)); hold on;
+m = load(dir + "/memristance_square.txt"); m = m';
+t = linspace(0,19,length(m(:,1)));
+figure(1); plot(t,m(:,1)); hold on;
 
 pause(pause_time)
 
@@ -18,6 +19,7 @@ X_s = load(dir + "/memristance_square.txt");
 X_t = load(dir + "/memristance_triangle.txt");
 theta_s=zeros(1,length(X_s(:,1)));
 theta_t=zeros(1,length(X_t(:,1)));
+unknown_label = X_s;
 
 m = length(X_s(1,:));
 nbrInternalStates = length(X_s(:,1));
@@ -29,7 +31,7 @@ for j = 1:nbrInternalStates
         theta_s(j) = theta_s(j) - 0.1 * delta_theta_s_j;
     end
 end
-y = -1 * ones(1,m);
+y =  - ones(1,m);
 for j = 1:nbrInternalStates
     for i = 1:m
         delta_theta_t_j = 1/m * ( (theta_t*X_t(:,i)-y(i)) ) * X_t(j,i);
@@ -45,7 +47,7 @@ legend('square output on square signal' , 'triangle output on triangle signal')
 xlabel('t')
 hold off
 
-unknown_label = X_s;
+
 figure(2)
 plot(theta_t*unknown_label,'b'); hold on
 plot(theta_s*unknown_label,'g');
@@ -59,7 +61,7 @@ for i = 1:m
     if(abs(output_s(i) - 1) < abs(output_t(i) + 1))
         classification(i) = 1;
     else
-        classification(i) = -1;
+        classification(i) = 0;
     end
 end
 figure(3)

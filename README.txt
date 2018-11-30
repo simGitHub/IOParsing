@@ -28,7 +28,6 @@ if preset mode:
 	- SET_PRESET_SIZE
 	- BUILD_PRESET_NETWORK # no parameter used in for this command
 (#NODES is specified indirectly in SET_PRESET_SIZE)
-For preset type 
 
 other: 
 	- empty lines are accepted
@@ -48,15 +47,17 @@ input to the program:
 	 
 Types of presets:
 	- multi_series
-	- grid*
-*: does not exist yet
+	- grid
+*: does not exist yet (is symbol is present)
 
 explanation of presets:
 	- multiseries: basically just multiple series each with their own voltage source connected to them. The series connections are not connected to each other.
-	- grid: similar to mutli_series, but here the series is connected to each other vertically, and the structure is a bit similar 			to a grid structure hence the word
+	- grid: similar to mutli_series, but here the series is connected to each other vertically, and the structure is a bit similar 
+	  to a grid structure hence the word. Every node thus has vertical and horizontal connected memristors.
 
 Future ideas: 
-	- Presentate multi_series and grid structure on figures for clarity purpose.
+	- Presentate multi_series and grid structure in figures for clarity purpose.
+	- add so that Rinit, Rmin, Rmax and v_thresh may also be drawn from normal distribution.
 	
 
 
