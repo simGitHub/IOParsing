@@ -59,7 +59,6 @@ public class IOParser{
 						StringTokenizer st = new StringTokenizer(line);
 						String command = st.nextToken();
 						
-						// sets number of nodes
 						if(command.equals("#NODES")) {
 							numberOfNodes = Integer.parseInt(st.nextToken());
 							if(numberOfNodes > 0) {
@@ -72,7 +71,6 @@ public class IOParser{
 							}
 						}
 
-						// Sets frequency signal with amplitude values
 						else if(command.equals("FREQUENCY_INPUT")){
 							nPosSource = Integer.parseInt(st.nextToken(" ,"));
 							nNegSource = Integer.parseInt(st.nextToken(",|"));
@@ -97,7 +95,6 @@ public class IOParser{
 							System.out.println("and frequency: " + ampls[numberOfAmpIndices - 1]);
 						}
 						
-						// sets voltage source from data file
 						else if(command.equals("ADD_DATASOURCE")){
 							nPosSource = Integer.parseInt(st.nextToken(" ,"));
 							nNegSource = Integer.parseInt(st.nextToken(",|"));
@@ -106,7 +103,6 @@ public class IOParser{
 							System.out.println("Source for data input set between node " + nPosSource + " and " + nNegSource);
 						}
 						
-						// adds memristors to the network
 						else if(command.equals("ADD_MEM")) {
 							nPos = Integer.parseInt(st.nextToken(" ,"));
 							nNeg = Integer.parseInt(st.nextToken(",|"));
@@ -125,7 +121,6 @@ public class IOParser{
 							numberOfMemristors = numberOfMemristors + 1;
 						}
 						
-						// adds voltage monitors
 						else if(command.equals("ADD_MONITOR")) {
 							monitorArgument = st.nextToken(" ,");
 							addMonitorArgument = st.nextToken();
@@ -152,7 +147,7 @@ public class IOParser{
 							System.out.println("Number of voltage monitors: " + numberOfVoltageMonitors);
 
 						 
-						} // for clarity surpose, memristor adding commands may be encapsulated by a BEGIN_MEM and END_MEM commands in config file.
+						} 
 						else if(command.equals("BEGIN_MEM")) {
 							System.out.println(" ** Starting to add memristors. ** ");
 						}
@@ -245,7 +240,6 @@ public class IOParser{
 									}
 								}
 							}
-							// if has not: add vertical memristor connection between nodes
 							else if(preset.equals("grid")) {
 								numberOfNodes = presetLengthSize * presetDepthSize;
 								network = new Network(numberOfNodes);
