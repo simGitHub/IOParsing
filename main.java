@@ -10,20 +10,14 @@ public class main {
 			Network network = null; String configFile = args[0];
 			network = par.BuldNetworkFromConfigFile(configFile, network);
 			
-			dataName = "first_music_test.";
+			dataName = "oneColumnTest";
 			new SimulateNetwork(network, par, directory, dataName, dt, SIMULATION_TIME);
 			
-
 		}
-		
 		else {
 			System.out.println("Missing argument for input file name");
 
 		}	
-		
-		
-		
-		
 	}
 }
 

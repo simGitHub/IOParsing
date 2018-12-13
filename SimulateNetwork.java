@@ -7,34 +7,60 @@ import readData.ReadFromTextFile2DArray;
 // make so it does not export voltage if only zero voltage monitors is declared
 
 public class SimulateNetwork {
+	List<VoltageSourceDictated> vgList;
+	double[][] dataset;
+	Network network;
+	double dt;
+	IOParser par;
+	int SIMULATION_TIME;
+	String dataDir;
+	String dataName;
+	
 	public SimulateNetwork(Network network, IOParser par, String dataDir, String dataName, double dt, int SIMULATION_TIME) {
 		network.resetSources(); // need to reset for different datasets from main
 		ReadFromTextFile2DArray textToArrayReader = new ReadFromTextFile2DArray();
-		List<VoltageSourceDictated> vgList = par.vgList;
 		String dataFile = dataDir + "/" + dataName + ".txt";
+		dataset = textToArrayReader.readInTheArray(dataFile);
+		vgList = par.vgList;
 		
-		// Read data from file
-		double[][] dataset = textToArrayReader.readInTheArray(dataFile);
-		
-		// amplify the data signal
-		//for(int i = 0; i < dataset.length;i++) {
-		//	dataset[i][1] = par.amplifierValue * dataset[i][1];
-		//}
-		
-		// add source(s) and data to it (them). Maybe add exception handling, e.g. try and catch, for one may miss to add data to each source.
+		this.addDataToVoltageSources();
+		// this.amplifySignal(); Fix indices issues before uncommenting.
+		this.runSimulation();
+		}
+	
+	
+	public void addDataToVoltageSources(){
+		//double[][] dataSetForGivenVoltageSource;
+		VoltageSourceDictated vgTemp;
 		for(int i=0;i<vgList.size();i++) {
-			VoltageSourceDictated vgTemp = vgList.get(i);
+			vgList = par.vgList;
+			vgTemp = vgList.get(i);
+			//dataSetForGivenVoltageSource = exctractDataColumnAndTimeSignalFromMatrix(i);
+			System.out.println("value on i: " + i);
 			vgTemp.dictate(dataset, 1); 
 			vgTemp.defineDTtoSuggest(dt);
 			network.addsource(vgTemp);
 		}
-		
-		// run simulation
+	}
+	
+	public double[][] exctractDataColumnAndTimeSignalFromMatrix(int iColumn) {
+		return dataset;
+	}
+	
+	public void amplifySignal() {
+		for(int i = 0; i < dataset
+				.length;i++) {
+			dataset[i][1] = par.amplifierValue * dataset[i][1];
+		}
+	}
+	
+	public void runSimulation() {
 		System.out.println(" ** Starting simulation ** ");
 		network.operateNetwork(0.0, SIMULATION_TIME);
 		System.out.println(" ** Simulation finished ** ");
-		
-		// exctract all added monitors, memristors to one 2D text file and voltage to one 2D text file. One column corresponds to a value set.
+	}
+	
+	public void extractData() {
 		ArrayList<Monitor> monitors = network.getMonitors();
 		int numberOfVoltageMonitors = par.numberOfVoltageMonitors;
 		int numberOfMemristors = par.numberOfMemristors;			

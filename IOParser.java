@@ -6,10 +6,6 @@
  */
 
 
-/*
- * Temporarily thoughts: 
- * 		Adding monitors with same index yield more monitors? perhaps same monitor is added to the array list
- */
 import java.io.*;
 import java.util.*;
 import circuitNetwork.*;
@@ -206,6 +202,7 @@ public class IOParser{
 								network = new Network(numberOfNodes);
 								System.out.println("Number of nodes are set to " + numberOfNodes);
 								System.out.println("Number of memristor that will be added: " + numberOfNodes);
+								System.out.println("Number of voltage sources that will be added: " + presetDepthSize);
 								maxR = maxR_default; minR = minR_default; initR = initR_default;
 								ampls = new double[0];
 								for(int j=0;j<presetDepthSize;j++) {
@@ -246,6 +243,7 @@ public class IOParser{
 								System.out.println("Number of nodes are set to " + numberOfNodes);
 								int nbrOfMemtoBeAdded = presetLengthSize * presetDepthSize + presetLengthSize * (presetDepthSize - 1);
 								System.out.println("Number of memristor that will be added: " + nbrOfMemtoBeAdded);
+								System.out.println("Number of voltage sources that will be added: " + presetDepthSize);
 								maxR = maxR_default; minR = minR_default; initR = initR_default;
 								ampls = new double[0];
 								for(int j=0;j<presetDepthSize;j++) {
