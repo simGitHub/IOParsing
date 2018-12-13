@@ -5,15 +5,12 @@ public class main {
 		final int SIMULATION_TIME = 19;
 		IOParser par = new IOParser();
 		if(args.length != 0) {
-			String directory = "/users/simon/eclipse-workspace/simulator/src/data/preset/series/";
+			String directory = "/users/simon/eclipse-workspace/simulator/src/data/music/";
 			String dataName; double dt = 0.01; 
 			Network network = null; String configFile = args[0];
 			network = par.BuldNetworkFromConfigFile(configFile, network);
 			
-			dataName = "square";
-			new SimulateNetwork(network, par, directory, dataName, dt, SIMULATION_TIME);
-			
-			dataName = "triangle";
+			dataName = "first_music_test.";
 			new SimulateNetwork(network, par, directory, dataName, dt, SIMULATION_TIME);
 			
 

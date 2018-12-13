@@ -12,15 +12,14 @@ public class SimulateNetwork {
 		ReadFromTextFile2DArray textToArrayReader = new ReadFromTextFile2DArray();
 		List<VoltageSourceDictated> vgList = par.vgList;
 		String dataFile = dataDir + "/" + dataName + ".txt";
-		String addWordmStr;
 		
 		// Read data from file
 		double[][] dataset = textToArrayReader.readInTheArray(dataFile);
 		
 		// amplify the data signal
-		for(int i = 0; i < dataset.length;i++) {
-			dataset[i][1] = par.amplifierValue * dataset[i][1];
-		}
+		//for(int i = 0; i < dataset.length;i++) {
+		//	dataset[i][1] = par.amplifierValue * dataset[i][1];
+		//}
 		
 		// add source(s) and data to it (them). Maybe add exception handling, e.g. try and catch, for one may miss to add data to each source.
 		for(int i=0;i<vgList.size();i++) {

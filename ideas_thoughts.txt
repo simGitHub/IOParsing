@@ -2,3 +2,6 @@ collection of thoughts:
  - also draw Rmin,Rmax,Rinit,v_thresh from normal    distribution?
  - compare the results with only using linear regression of voltage
  - how is the copyright of using music data from e.g. spotify
+ - skriva om java koden lite, så den inkluderar metoder, och därför skulle bli 
+   lättare att förstå. Tänk igenom strukturen. How write good code? Tänk igenom
+   hur kostruktorerna ska vara etc.
