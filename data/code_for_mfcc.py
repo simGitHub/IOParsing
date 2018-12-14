@@ -41,7 +41,7 @@ def readFileAndPerformMFCC(fileName):
 	extractedData,samplingRate = lb.load(fileName)
 	resolution = 300 # lesser value the better resolution
 	melSpectroGram = lb.feature.melspectrogram(y = extractedData, sr = samplingRate, hop_length = resolution)
-	numberOf_mfcc_coefficients = 1
+	numberOf_mfcc_coefficients = 3
 	mfcc_matrix = lb.feature.mfcc(S= lb.power_to_db(melSpectroGram), n_mfcc = numberOf_mfcc_coefficients)
 	return mfcc_matrix
 
@@ -50,7 +50,7 @@ fileName = 'music/blues.00000.au'
 mfcc_matrix_blues = readFileAndPerformMFCC(fileName)
 #plot_mfcc_data(mfcc_matrix_blues, 'blues')
 #doSomeMaths(mfcc_matrix_blues)
-saveFileToTxt(mfcc_matrix_blues, saveFileName = 'oneColumnTest.txt')
+saveFileToTxt(mfcc_matrix_blues, saveFileName = 'threeColumnTest.txt')
 
 
 

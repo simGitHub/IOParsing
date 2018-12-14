@@ -8,53 +8,66 @@ import readData.ReadFromTextFile2DArray;
 
 public class SimulateNetwork {
 	List<VoltageSourceDictated> vgList;
-	double[][] dataset;
 	Network network;
-	double dt;
 	IOParser par;
 	int SIMULATION_TIME;
+	double[][] dataset;
+	double dt;
 	String dataDir;
 	String dataName;
 	
 	public SimulateNetwork(Network network, IOParser par, String dataDir, String dataName, double dt, int SIMULATION_TIME) {
-		network.resetSources(); // need to reset for different datasets from main
+		this.vgList = par.vgList;
+		this.par = par;
+		this.network = network;
+		this.SIMULATION_TIME = SIMULATION_TIME; 
 		ReadFromTextFile2DArray textToArrayReader = new ReadFromTextFile2DArray();
 		String dataFile = dataDir + "/" + dataName + ".txt";
 		dataset = textToArrayReader.readInTheArray(dataFile);
-		vgList = par.vgList;
 		
 		this.addDataToVoltageSources();
-		// this.amplifySignal(); Fix indices issues before uncommenting.
+		if(par.amplifierValue != 1) {
+			this.changeAmplitudeOfSignal();
+		}
 		this.runSimulation();
+		this.extractData();
 		}
 	
 	
 	public void addDataToVoltageSources(){
-		//double[][] dataSetForGivenVoltageSource;
 		VoltageSourceDictated vgTemp;
-		for(int i=0;i<vgList.size();i++) {
-			vgList = par.vgList;
+		int nbrDataColumns = dataset[0].length - 1;
+		int nbrVoltageSources = vgList.size();
+		if (nbrDataColumns != nbrVoltageSources){
+			System.out.println("Caution: number of voltage sources and data columns is not the same, some voltage sources will get the same data input (data from column first data column)");
+		}
+		for(int i=0;i<nbrVoltageSources;i++) {
 			vgTemp = vgList.get(i);
-			//dataSetForGivenVoltageSource = exctractDataColumnAndTimeSignalFromMatrix(i);
-			System.out.println("value on i: " + i);
-			vgTemp.dictate(dataset, 1); 
+			if(i < nbrDataColumns) {
+				vgTemp.dictate(dataset, i); 
+			}
+			else {
+				System.out.println("Adding same data column value to rest of the voltage sources");
+				vgTemp.dictate(dataset, 1);
+			}
 			vgTemp.defineDTtoSuggest(dt);
 			network.addsource(vgTemp);
 		}
 	}
 	
-	public double[][] exctractDataColumnAndTimeSignalFromMatrix(int iColumn) {
-		return dataset;
-	}
-	
-	public void amplifySignal() {
-		for(int i = 0; i < dataset
-				.length;i++) {
-			dataset[i][1] = par.amplifierValue * dataset[i][1];
+	public void changeAmplitudeOfSignal() {
+		for(int iRow = 0; iRow < dataset.length;iRow++) {
+			for (int iCol = 1; iCol < dataset[0].length; iCol++) {
+				dataset[iRow][iCol] = par.amplifierValue * dataset[iRow][iCol];
+			}
 		}
 	}
 	
 	public void runSimulation() {
+		//Network networktwo = new Network(1);
+		//Memristor memristor = new Memristor(10, 20, 5, 1, 2, 0.5, 1, 0);
+		//memristor.beUsedForState();
+		//network.addbranch(memristor);
 		System.out.println(" ** Starting simulation ** ");
 		network.operateNetwork(0.0, SIMULATION_TIME);
 		System.out.println(" ** Simulation finished ** ");
