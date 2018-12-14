@@ -21,16 +21,22 @@ public class SimulateNetwork {
 		this.par = par;
 		this.network = network;
 		this.SIMULATION_TIME = SIMULATION_TIME; 
+		this.dt = dt;
+		this.dataName = dataName;
+		this.dataDir = dataDir;
 		ReadFromTextFile2DArray textToArrayReader = new ReadFromTextFile2DArray();
 		String dataFile = dataDir + "/" + dataName + ".txt";
-		dataset = textToArrayReader.readInTheArray(dataFile);
+		this.dataset = textToArrayReader.readInTheArray(dataFile);
 		
-		this.addDataToVoltageSources();
+		
 		if(par.amplifierValue != 1) {
 			this.changeAmplitudeOfSignal();
 		}
+		
+		this.addDataToVoltageSources();
 		this.runSimulation();
 		this.extractData();
+		
 		}
 	
 	
@@ -44,7 +50,7 @@ public class SimulateNetwork {
 		for(int i=0;i<nbrVoltageSources;i++) {
 			vgTemp = vgList.get(i);
 			if(i < nbrDataColumns) {
-				vgTemp.dictate(dataset, i); 
+				vgTemp.dictate(dataset, i + 1); 
 			}
 			else {
 				System.out.println("Adding same data column value to rest of the voltage sources");
@@ -64,10 +70,6 @@ public class SimulateNetwork {
 	}
 	
 	public void runSimulation() {
-		//Network networktwo = new Network(1);
-		//Memristor memristor = new Memristor(10, 20, 5, 1, 2, 0.5, 1, 0);
-		//memristor.beUsedForState();
-		//network.addbranch(memristor);
 		System.out.println(" ** Starting simulation ** ");
 		network.operateNetwork(0.0, SIMULATION_TIME);
 		System.out.println(" ** Simulation finished ** ");

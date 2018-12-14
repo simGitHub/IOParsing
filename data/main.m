@@ -1,3 +1,11 @@
+%% testing
+clc;
+v = load ('voltage_threeColumnTest.txt');
+v = v';
+data = load('threeColumnTest.txt');
+
+
+%%
 clear;clc;clf;
 pause_time = 2;
 

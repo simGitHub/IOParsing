@@ -11,14 +11,15 @@ import java.util.*;
 import circuitNetwork.*;
 
 public class IOParser{
-	// these variable needs to be seen by the main
+	// these variable needs to be seen by SimulateNetwork class.
 	int amplifierValue = 0;
 	int numberOfMemristors = 0;
 	int numberOfVoltageMonitors = 0;
 	List<VoltageSourceDictated> vgList = new ArrayList<VoltageSourceDictated>(); // need array if multiple sources are added
-	public Network BuldNetworkFromConfigFile(String configFile, Network network) {
+	public Network BuldNetworkFromConfigFile(String configFile) {
 		
 		// declaration of variables
+		Network network = null;
 		String preset = null; int presetDepthSize = 0; int presetLengthSize = 0;
 		int numberOfNodes = 0;
 		BufferedReader br = null;
