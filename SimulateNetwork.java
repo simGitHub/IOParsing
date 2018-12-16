@@ -70,9 +70,9 @@ public class SimulateNetwork {
 	}
 	
 	public void runSimulation() {
-		System.out.println(" ** Starting simulation ** ");
+		//System.out.println(" ** Starting simulation ** ");
 		network.operateNetwork(0.0, SIMULATION_TIME);
-		System.out.println(" ** Simulation finished ** ");
+		//System.out.println(" ** Simulation finished ** ");
 	}
 	
 	public void extractData() {
@@ -92,14 +92,12 @@ public class SimulateNetwork {
 		if(par.numberOfVoltageMonitors == 0) {
 			String mStr = dataDir + "/memristance_" + dataName + ".txt";
 			new ExportMatrix(mStr, memristanceMatrix);
-			System.out.println();
 		}
 		else {
 			String mStr = dataDir + "/memristance_" + dataName + ".txt";
 			String vStr = dataDir + "/voltage_" + dataName + ".txt";
 			new ExportMatrix(mStr, memristanceMatrix);
 			new ExportMatrix(vStr, voltageMatrix);
-			System.out.println();
 		}
 		
 	}
