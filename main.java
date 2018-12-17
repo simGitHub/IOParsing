@@ -2,7 +2,7 @@ import circuitNetwork.*;
 
 public class main {
 	public static void main(String[] args) {
-		final int SIMULATION_TIME = 12;
+		final int SIMULATION_TIME = 20;
 		IOParser par = new IOParser();
 		if(args.length != 0) {
 			String directory = "/users/simon/eclipse-workspace/simulator/src/data/music/";

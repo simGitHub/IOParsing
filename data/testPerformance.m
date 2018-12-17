@@ -1,4 +1,4 @@
-function p = testPerformance(genre, m_test, theta_blues, theta_classical, transient)
+function p = testPerformance(genre, m_test, theta_blues, theta_classical, transient, y_blues, y_classical)
     dataTestSize = size(m_test,3);
     nbrOfTimeSteps = size(m_test,2);
     transientValue = round(transient * nbrOfTimeSteps);
@@ -7,7 +7,7 @@ function p = testPerformance(genre, m_test, theta_blues, theta_classical, transi
     cError_classical = 0;
     for iSong = 1 : dataTestSize
         for iTimeStep = (transientValue + 1 ) : nbrOfTimeSteps
-            if( abs(theta_blues * m_test(:,iTimeStep, iSong) - 1) < abs(theta_classical * m_test(:,iTimeStep, iSong) - 0) )
+            if( abs(theta_blues * m_test(:,iTimeStep, iSong) - y_blues) < abs(theta_classical * m_test(:,iTimeStep, iSong) - y_classical) )
                 cError_classical = cError_classical + 1;
             else
                 cError_blues = cError_blues + 1;

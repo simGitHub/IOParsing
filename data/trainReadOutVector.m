@@ -4,7 +4,7 @@ function theta = trainReadOutVector(genre, m, y, transient)
     nbrOfTrainingSongs = size(m,3);
     theta = ones(1,nbrOfMemristors);
     eta = 0.001;
-    transientValue = nbrOfTimeSteps * transient;
+    transientValue = round(nbrOfTimeSteps * transient);
     gradient = zeros(nbrOfMemristors, nbrOfTrainingSongs);
     
     for iMem = 1:nbrOfMemristors
