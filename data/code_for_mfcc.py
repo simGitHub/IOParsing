@@ -41,7 +41,7 @@ class CalculateMFCC:
 
 	def readFileAndPerformMFCC(self,fileName):
 		x,sr = lb.load(fileName)
-		mfcc = lb.feature.mfcc(x, sr = sr, n_mfcc = self.n_mfcc)
+		mfcc = lb.feature.mfcc(x, sr = sr, n_mfcc = self.n_mfcc, hop_length = 300)
 		return mfcc
 
 
