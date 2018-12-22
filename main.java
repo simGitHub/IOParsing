@@ -5,7 +5,7 @@ public class main {
 		final int SIMULATION_TIME = 20;
 		IOParser par = new IOParser();
 		if(args.length != 0) {
-			String directory = "/users/simon/eclipse-workspace/simulator/src/data/music/";
+			String directory = "/users/simon/eclipse-workspace/simulator/src/data/music/n_mfcc/4";
 			String dataName; 
 			double dt = 0.01; 
 			String configFile = args[0];

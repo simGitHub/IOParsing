@@ -7,10 +7,10 @@ class CalculateMFCC:
 	def __init__(self):
 		self.nbrOfSongsPerGenre = 100
 		self.readFileDirectory = "../../music_data/"
-		self.saveFileDirectory = "music/"
-		self.n_mfcc = 8
+		self.saveFileDirectory = "music/n_mfcc/2/normalized/" 
+		self.n_mfcc = 2
 		self.dt = 0.01
-		self.normalizeData_bool = False
+		self.normalizeData_bool = True
 		self.normalizeCoefficients_bool = False
 		self.attenuateValue = 0.01
 
