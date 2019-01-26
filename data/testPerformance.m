@@ -1,4 +1,4 @@
-function f = testPerformance(genre, m_test, theta_blues, theta_classical, transient, y_blues, y_classical)
+function p = testPerformance(genre, m_test, theta_blues, theta_classical, transient, y_blues, y_classical)
     dataTestSize = size(m_test,3);
     nbrOfTimeSteps = size(m_test,2);
     transientValue = transient * nbrOfTimeSteps;
@@ -32,18 +32,25 @@ function f = testPerformance(genre, m_test, theta_blues, theta_classical, transi
     cError_blues = cError_blues / nbrOfTests;
     %accuracy_classical = accuracy_classical / dataTestSize;
     %accuracy_blues = accuracy_blues / dataTestSize;
-
+    display_bool = false;
     if genre == "blues"
-        accuracy = 1 - cError_blues;
-        disp("accuracy of classification for all timesteps: " + accuracy)
-        disp("accuracy of classification per song: " + accuracy_blues / dataTestSize)
-        disp("number of correct classified songs: " + accuracy_blues + " out of " + dataTestSize);
+        p = cError_blues; 
+        if display_bool
+            accuracy = 1 - cError_blues;
+            disp("accuracy of classification for all timesteps: " + accuracy)
+            disp("accuracy of classification per song: " + accuracy_blues / dataTestSize)
+            disp("number of correct classified songs: " + accuracy_blues + " out of " + dataTestSize);
+        end
     elseif genre == "classical"
-        accuracy = 1 - cError_classical;
-        disp("accuracy of classification for all timesteps: " + accuracy)
-        disp("accuracy of classification per song: " + accuracy_classical / dataTestSize)
-        disp("number of correct classified songs: " + accuracy_classical + " out of " + dataTestSize);
+        p = cError_classical; 
+        if display_bool
+            accuracy = 1 - cError_classical;
+            disp("accuracy of classification for all timesteps: " + accuracy)
+            disp("accuracy of classification per song: " + accuracy_classical / dataTestSize)
+            disp("number of correct classified songs: " + accuracy_classical + " out of " + dataTestSize);
+        end
     end
-    disp("genre type tested: " + genre)
-    fprintf("\n")
+    if display_bool
+        disp("genre type tested: " + genre)
+    end
 end
