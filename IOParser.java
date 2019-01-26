@@ -15,6 +15,8 @@ public class IOParser{
 	int amplifierValue = 0;
 	int numberOfMemristors = 0;
 	int numberOfVoltageMonitors = 0;
+	int grid_depth;
+	int grid_length;
 	List<VoltageSourceDictated> vgList = new ArrayList<VoltageSourceDictated>(); // need array if multiple sources are added
 	public Network BuldNetworkFromConfigFile(String configFile) {
 		
@@ -29,7 +31,7 @@ public class IOParser{
 		double alpha_mu = 1.0; double beta_mu = 10.0; double beta_sigma = 0; double alpha_sigma = 0;
 		double alpha; double beta;
 		double initR; double minR; double maxR; 
-		double initR_default = 4; double minR_default = 2; double maxR_default = 8; double vthresh = 0.4;
+		double initR_default = 5; double minR_default = 2; double maxR_default = 8; double vthresh = 0.4;
 		String monitorArgument; String addMonitorArgument;
 		
 		try {
@@ -239,6 +241,8 @@ public class IOParser{
 								}
 							}
 							else if(preset.equals("grid")) {
+								presetLengthSize = grid_length;
+								presetDepthSize = grid_depth;
 								numberOfNodes = presetLengthSize * presetDepthSize;
 								network = new Network(numberOfNodes);
 								System.out.println("Number of nodes are set to " + numberOfNodes);
@@ -253,9 +257,9 @@ public class IOParser{
 									System.out.println("Source for data input set between node " + nPos + " and " + nNeg);
 									for(int i=1;i<=presetLengthSize;i++) {
 										if(i + 1 <= presetLengthSize) {
-											alpha = r.nextGaussian()*alpha_sigma + alpha_mu;
-											beta = r.nextGaussian()*beta_sigma + beta_mu;
 											if((j + 1) != presetDepthSize) {
+												alpha = r.nextGaussian()*alpha_sigma + alpha_mu;
+												beta = r.nextGaussian()*beta_sigma + beta_mu;
 												nPos = i + j * presetLengthSize; nNeg = i + (1 + j) * presetLengthSize;
 												Memristor memristor = new Memristor(initR, maxR, minR, alpha, beta, vthresh, nPos, nNeg);
 												memristor.beUsedForState();
@@ -265,6 +269,8 @@ public class IOParser{
 												System.out.println(". Alpha is set to: " + alpha + ", and beta is set to: " + beta);
 												numberOfMemristors = numberOfMemristors + 1;
 											}
+											alpha = r.nextGaussian()*alpha_sigma + alpha_mu;
+											beta = r.nextGaussian()*beta_sigma + beta_mu;
 											nPos = i + j * presetLengthSize; nNeg = i + 1 + j * presetLengthSize;
 											Memristor memristor = new Memristor(initR, maxR, minR, alpha, beta, vthresh, nPos, nNeg);
 											memristor.beUsedForState();
@@ -275,10 +281,10 @@ public class IOParser{
 											numberOfMemristors = numberOfMemristors + 1;
 										}
 										else {
-											alpha = r.nextGaussian()*alpha_sigma + alpha_mu;
-											beta = r.nextGaussian()*beta_sigma + beta_mu;
 											if((j + 1) != presetDepthSize) {
 												nPos = i + j * presetLengthSize; nNeg = i + (1 + j) * presetLengthSize;
+												alpha = r.nextGaussian()*alpha_sigma + alpha_mu;
+												beta = r.nextGaussian()*beta_sigma + beta_mu;
 												Memristor memristor = new Memristor(initR, maxR, minR, alpha, beta, vthresh, nPos, nNeg);
 												memristor.beUsedForState();
 												network.addbranch(memristor);
@@ -288,6 +294,8 @@ public class IOParser{
 												numberOfMemristors = numberOfMemristors + 1;
 											}
 											nPos = i + j * presetLengthSize; nNeg = 0;
+											alpha = r.nextGaussian()*alpha_sigma + alpha_mu;
+											beta = r.nextGaussian()*beta_sigma + beta_mu;
 											Memristor memristor = new Memristor(initR, maxR, minR, alpha, beta, vthresh, nPos, nNeg);
 											memristor.beUsedForState();
 											network.addbranch(memristor);

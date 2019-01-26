@@ -15,8 +15,9 @@ public class SimulateNetwork {
 	double dt;
 	String dataDir;
 	String dataName;
+	String simulationNumber;
 	
-	public SimulateNetwork(Network network, IOParser par, String dataDir, String dataName, double dt, int SIMULATION_TIME) {
+	public SimulateNetwork(Network network, IOParser par, String dataDir, String dataName, double dt, int SIMULATION_TIME, int k) {
 		this.vgList = par.vgList;
 		this.par = par;
 		this.network = network;
@@ -27,6 +28,7 @@ public class SimulateNetwork {
 		ReadFromTextFile2DArray textToArrayReader = new ReadFromTextFile2DArray();
 		String dataFile = dataDir + "/" + dataName + ".txt";
 		this.dataset = textToArrayReader.readInTheArray(dataFile);
+		simulationNumber = "/" + Integer.toString(k) + "/";
 		
 		
 		if(par.amplifierValue != 1) {
@@ -90,12 +92,12 @@ public class SimulateNetwork {
 			memristanceMatrix.add(memristanceValues);
 		}
 		if(par.numberOfVoltageMonitors == 0) {
-			String mStr = dataDir + "/memristance_" + dataName + ".txt";
+			String mStr = dataDir + simulationNumber + "/memristance_" + dataName + ".txt";
 			new ExportMatrix(mStr, memristanceMatrix);
 		}
 		else {
-			String mStr = dataDir + "/memristance_" + dataName + ".txt";
-			String vStr = dataDir + "/voltage_" + dataName + ".txt";
+			String mStr = dataDir + simulationNumber + "/memristance_" + dataName + ".txt";
+			String vStr = dataDir + simulationNumber + "/voltage_" + dataName + ".txt";
 			new ExportMatrix(mStr, memristanceMatrix);
 			new ExportMatrix(vStr, voltageMatrix);
 		}
